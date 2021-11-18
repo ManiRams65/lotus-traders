@@ -2,33 +2,26 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 export const Product = ({ product }) => {
-    return (<div key={product.id} className="group relative">
-        <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-            <Link href={{
-                pathname: '/product-page',
-                query: { id: product.id ? product.id : null },
-            }}>
-                <img src={product.imageSrc} alt={product.imageAlt}
-                    className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-                />
-            </Link>
-        </div>
-        <div className="mt-4 flex justify-between">
-            <div>
-                <h3 className="text-sm text-gray-700">
-                    <Link href={{
-                        pathname: '/product-page',
-                        query: { id: product.id ? product.id : null },
-                    }}>
-                        <a>
-                            <span aria-hidden="true" className="absolute inset-0" />
-                            {product.name}
-                        </a>
-                    </Link>
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">{product.color}</p>
+    return (<div key={product.id} className="col-span-6 md:col-span-3">
+        <Link href={{
+            pathname: '/product-page',
+            query: { id: product.id ? product.id : null },
+        }}>
+            <div className="w-full relative text-left">
+                <div className="h-40 md:h-60 lg:h-72 xl:h-96 w-full relative overflow-hidden cursor-pointer">
+                    <Image src={product.imageSrc} alt={product.imageAlt} layout='fill'
+                        objectFit='contain' className="h-full !w-auto mx-auto group-hover:opacity-75" />
+                </div>
+                <div className="p-4">
+                    <h3 className="text-md text-gray-900">
+                        {product.name}
+                    </h3>
+                    <p className="text-sm font-medium text-primary mt-4">{product.price}</p>
+                </div>
             </div>
-            <p className="text-sm font-medium text-gray-900">{product.price}</p>
-        </div>
+
+        </Link>
+
+
     </div>)
 }

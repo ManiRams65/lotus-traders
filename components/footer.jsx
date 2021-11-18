@@ -6,9 +6,9 @@
 export const Footer = () => {
     return (
         <footer className="text-gray-600 body-font">
-            <div className="container px-5 py-24 mx-auto">
+            <div className="container px-5 py-10 lg:py-16 mx-auto">
                 <div className="flex flex-wrap md:text-left text-center order-first">
-                    <div className="lg:w-2/4 md:w-1/2 w-full px-4 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
+                    <div className="lg:w-3/4 md:w-1/2 w-full px-4 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
                         <a className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" viewBox="0 0 24 24">
                                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
@@ -17,41 +17,29 @@ export const Footer = () => {
                         </a>
                         <p className="mt-2 text-sm text-gray-500"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam fugiat ex accusamus recusandae doloremque aliquid natus, exercitationem animi facere voluptatum accusantium reiciendis provident dignissimos praesentium nulla saepe error vitae cum? </p>
                     </div>
-                    <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-                        <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">Contact us:</h2>
-                        <div className="flex">
-                            <p className="mr-1 text-gray-800">Phone:</p>
+                    <div className="lg:w-1/4 md:w-1/2 md:text-center w-full px-4">
+                        <h2 className="title-font font-medium text-gray-900 tracking-widest text-md mb-3 mt-5 lg:mt-0">Contact us:</h2>
+                        <div className="flex flex-col mb-2 lg:flex-row">
+                            <p className="mr-1 text-gray-700">Phone:</p>
                             <a href="tel:+91999999999" aria-label="Our phone" title="Our phone"
-                                className="transition-colors duration-300 text-gray-700 hover:text-blue-500">
+                                className="transition-colors duration-300 text-gray-900 hover:text-blue-500">
                                 (+91) 999999999
                             </a>
                         </div>
-                        <div className="flex">
-                            <p className="mr-1 text-gray-800">Email:</p>
+                        <div className="flex flex-col mb-2 lg:flex-row">
+                            <p className="mr-1 text-gray-700">Email:</p>
                             <a href="mailto:xyz@mail.com" aria-label="Our email" title="Our email"
-                                className="transition-colors duration-300 text-gray-700 hover:text-blue-500">
+                                className="transition-colors duration-300 text-gray-900 hover:text-blue-500">
                                 xyz@mail.com
                             </a>
                         </div>
-                        <div className="flex">
-                            <p className="mr-1 text-gray-800">Address:</p>
+                        <div className="flex flex-col lg:flex-row">
+                            <p className="mr-1 text-gray-700">Address:</p>
                             <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Our address"
-                                title="Our address" className="transition-colors duration-300 text-gray-700 hover:text-blue-500">
+                                title="Our address" className="transition-colors duration-300 text-gray-900 hover:text-blue-500">
                                 Address line 1, city, state
                             </a>
                         </div>
-                    </div>
-                    <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-                        <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">SUBSCRIBE</h2>
-                        <div className="flex xl:flex-nowrap md:flex-nowrap lg:flex-wrap flex-wrap justify-center items-end md:justify-start">
-                            <div className="relative w-40 sm:w-auto xl:mr-4 lg:mr-0 sm:mr-4 mr-2">
-                                <label for="footer-field" className="leading-7 text-sm text-gray-600">Email</label>
-                                <input type="text" id="footer-field" name="footer-field" className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:bg-transparent focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
-                            </div>
-                            <button className="lg:mt-2 xl:mt-0 flex-shrink-0 inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Button</button>
-                        </div>
-                        <p className="text-gray-500 text-sm mt-2 md:text-left text-center">Stay up to date by subscribing to the newsletter.
-                        </p>
                     </div>
                 </div>
             </div>

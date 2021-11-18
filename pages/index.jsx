@@ -12,11 +12,11 @@ export default function Home({ featured }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
+      <main className="flex flex-col items-center justify-center w-full flex-1 px-2 lg:px-10 text-center">
         <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
           <div className="grid gap-10 lg:grid-cols-2">
             <div className="flex flex-col justify-center md:pr-8 xl:pr-0 lg:max-w-lg">
-              <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-tertiary">
+              <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-tertiary hidden md:flex">
                 <svg className="text-teal-900 w-7 h-7" viewBox="0 0 24 24">
                   <polyline fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
                     strokeMiterlimit="10" points=" 8,5 8,1 16,1 16,5" strokeLinejoin="round" />
@@ -95,36 +95,30 @@ export default function Home({ featured }) {
           </div>
         </div>
 
-        <div className="bg-white">
-          <div className="max-w-2xl mx-auto py-4 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-            <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">Featured products</h2>
-            <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-              {featured && featured.map((product) => (
-                <Product product={product}/>
-              ))}
-            </div>
+        <div className="bg-white py-4 px-1 md:px-6 w-full">
+          <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">Featured products</h2>
+          <div className="mt-6 grid grid-cols-12 gap-6">
+            {featured && featured.map((product) => (
+              <Product key={'featured' + product.id} product={product} />
+            ))}
           </div>
         </div>
 
-        <div className="bg-white">
-          <div className="max-w-2xl mx-auto py-4 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-            <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">Top rented products</h2>
-            <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-              {featured && featured.map((product) => (
-                <Product product={product}/>
-              ))}
-            </div>
+        <div className="bg-white py-4 px-1 md:px-6 w-full">
+          <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">Top rented products</h2>
+          <div className="mt-6 grid grid-cols-12 gap-6">
+            {featured && featured.map((product) => (
+              <Product key={'top rented' + product.id} product={product} />
+            ))}
           </div>
         </div>
 
-        <div className="bg-white">
-          <div className="max-w-2xl mx-auto py-4 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-            <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">New products</h2>
-            <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-              {featured && featured.map((product) => (
-                <Product product={product}/>
-              ))}
-            </div>
+        <div className="py-4 px-1 md:px-6 bg-white w-full">
+          <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">New products</h2>
+          <div className="mt-6 grid grid-cols-12 gap-6">
+            {featured && featured.map((product) => (
+              <Product key={'new products' + product.id} product={product} />
+            ))}
           </div>
         </div>
       </main>

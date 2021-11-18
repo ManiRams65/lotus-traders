@@ -8,13 +8,13 @@ export default function Categories() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
+            <main className="flex flex-col items-center justify-center w-full flex-1 px-2 lg:px-10 text-center">
                 <section className="text-gray-600 body-font">
                     <div className="container px-5 py-24 mx-auto">
                         <div className="flex flex-wrap -m-4">
                             <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
                                 <a className="block relative h-48 rounded overflow-hidden">
-                                    <img alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/420x260"/>
+                                    <img alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/420x260" />
                                 </a>
                                 <div className="mt-4">
                                     <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">CATEGORY</h3>
@@ -24,7 +24,7 @@ export default function Categories() {
                             </div>
                             <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
                                 <a className="block relative h-48 rounded overflow-hidden">
-                                    <img alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/421x261"/>
+                                    <img alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/421x261" />
                                 </a>
                                 <div className="mt-4">
                                     <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">CATEGORY</h3>
@@ -34,7 +34,7 @@ export default function Categories() {
                             </div>
                             <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
                                 <a className="block relative h-48 rounded overflow-hidden">
-                                    <img alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/422x262"/>
+                                    <img alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/422x262" />
                                 </a>
                                 <div className="mt-4">
                                     <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">CATEGORY</h3>
@@ -44,7 +44,7 @@ export default function Categories() {
                             </div>
                             <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
                                 <a className="block relative h-48 rounded overflow-hidden">
-                                    <img alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/423x263"/>
+                                    <img alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/423x263" />
                                 </a>
                                 <div className="mt-4">
                                     <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">CATEGORY</h3>
@@ -54,7 +54,7 @@ export default function Categories() {
                             </div>
                             <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
                                 <a className="block relative h-48 rounded overflow-hidden">
-                                    <img alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/424x264"/>
+                                    <img alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/424x264" />
                                 </a>
                                 <div className="mt-4">
                                     <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">CATEGORY</h3>
@@ -64,7 +64,7 @@ export default function Categories() {
                             </div>
                             <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
                                 <a className="block relative h-48 rounded overflow-hidden">
-                                    <img alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/425x265"/>
+                                    <img alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/425x265" />
                                 </a>
                                 <div className="mt-4">
                                     <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">CATEGORY</h3>
@@ -74,7 +74,7 @@ export default function Categories() {
                             </div>
                             <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
                                 <a className="block relative h-48 rounded overflow-hidden">
-                                    <img alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/427x267"/>
+                                    <img alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/427x267" />
                                 </a>
                                 <div className="mt-4">
                                     <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">CATEGORY</h3>
@@ -84,7 +84,7 @@ export default function Categories() {
                             </div>
                             <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
                                 <a className="block relative h-48 rounded overflow-hidden">
-                                    <img alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/428x268"/>
+                                    <img alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/428x268" />
                                 </a>
                                 <div className="mt-4">
                                     <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">CATEGORY</h3>

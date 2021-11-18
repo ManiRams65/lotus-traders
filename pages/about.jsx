@@ -36,7 +36,7 @@ export default function About() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <main classNameName="flex flex-col items-center justify-center w-full flex-1 px-10 text-center">
+            <main classNameName="flex flex-col items-center justify-center w-full flex-1 px-2 lg:px-10 text-center">
                 <section className="text-gray-600 body-font">
                     <div className="container mx-auto flex px-5 py-24 items-center justify-center flex-col">
                         <img className="lg:w-2/6 md:w-3/6 w-5/6 mb-10 object-cover object-center rounded" alt="hero" src="https://dummyimage.com/720x600" />

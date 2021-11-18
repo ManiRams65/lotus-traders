@@ -65,7 +65,7 @@ export default function SearchResult({ products, searchText }) {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
     return (
-        <div className="bg-white">
+        <div className="bg-white w-full">
             <div>
                 {/* Mobile filter dialog */}
                 <Transition.Root show={mobileFiltersOpen} as={Fragment}>
@@ -165,8 +165,8 @@ export default function SearchResult({ products, searchText }) {
                     </Dialog>
                 </Transition.Root>
 
-                <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="relative z-10 flex items-baseline justify-between pt-24 pb-6 border-b border-gray-200">
+                <main className="w-full px-4 sm:px-6 lg:px-8">
+                    <div className="relative z-10 flex items-baseline justify-between pt-4 lg:pt-16 pb-6 border-b border-gray-200">
                         <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">New Arrivals</h1>
 
                         <div className="flex items-center">
@@ -293,7 +293,7 @@ export default function SearchResult({ products, searchText }) {
                             <div className="lg:col-span-3">
                                 {products && products.length > 0 ? <div>
                                     <h2>Showing results for '{searchText}'...</h2>
-                                    <div className="rounded-lg mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+                                    <div className="rounded-lg mt-6 grid grid-cols-12 gap-6">
                                         {products && products.map((product) => (
                                             <Product product={product} />
                                         ))}
@@ -320,7 +320,7 @@ export async function getServerSideProps(ctx) {
 
     return {
         props: {
-            products: productsMock? productsMock : [],
+            products: productsMock ? productsMock : [],
             searchText: text ? text : ''
         },
     };

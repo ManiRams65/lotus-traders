@@ -1,4 +1,4 @@
-// import Link from 'next/link'
+import Link from 'next/link'
 // import Image from 'next/image'
 // import { } from '@heroicons/react/solid'
 
@@ -6,18 +6,18 @@
 export const Footer = () => {
     return (
         <footer className="text-gray-600 body-font">
-            <div className="container px-5 py-10 lg:py-16 mx-auto">
+            <div className="container px-5 py-10 lg:py-16 mx-auto hidden lg:block">
                 <div className="flex flex-wrap md:text-left text-center order-first">
                     <div className="lg:w-3/4 md:w-1/2 w-full px-4 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
-                        <a className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" viewBox="0 0 24 24">
-                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-                            </svg>
-                            <span className="ml-3 text-xl">Lotus Traders</span>
-                        </a>
+                        <Link href="/">
+                            <a className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
+                                <img src="/lotus-flower.png" className="w-10 h-10 p-1" alt="logo-alt" />
+                                <span className="ml-3 text-xl text-primary">Lotus Traders</span>
+                            </a>
+                        </Link>
                         <p className="mt-2 text-sm text-gray-500"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam fugiat ex accusamus recusandae doloremque aliquid natus, exercitationem animi facere voluptatum accusantium reiciendis provident dignissimos praesentium nulla saepe error vitae cum? </p>
                     </div>
-                    <div className="lg:w-1/4 md:w-1/2 md:text-center w-full px-4">
+                    <div className="lg:w-1/4 md:w-1/2 text-center lg:text-left w-full px-4">
                         <h2 className="title-font font-medium text-gray-900 tracking-widest text-md mb-3 mt-5 lg:mt-0">Contact us:</h2>
                         <div className="flex flex-col mb-2 lg:flex-row">
                             <p className="mr-1 text-gray-700">Phone:</p>
@@ -45,14 +45,14 @@ export const Footer = () => {
             </div>
             <div className="bg-gray-100">
                 <div className="container px-5 py-6 mx-auto flex items-center sm:flex-row flex-col">
-                    <a className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" viewBox="0 0 24 24">
-                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-                        </svg>
-                        <span className="ml-3 text-xl">Lotus Traders</span>
-                    </a>
+                    <Link href="/">
+                        <a className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
+                            <img src="/lotus-flower.png" className="w-10 h-10 p-1" alt="logo-alt" />
+                            <span className="ml-3 text-xl">Lotus Traders</span>
+                        </a>
+                    </Link>
                     <p className="text-sm text-gray-500 sm:ml-6 sm:mt-0 mt-4">Lotus Traders © 2021 —
-                        <a href="https://bezzietech.com" rel="noopener noreferrer" className="text-gray-600 ml-1" target="_blank">BezzieTech</a>
+                        <a href="https://bezzietech.com" rel="noopener noreferrer" className="text-gray-600 ml-1 hover:text-secondary" target="_blank">BezzieTech</a>
                     </p>
                     <span className="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
                         <a className="text-gray-500">

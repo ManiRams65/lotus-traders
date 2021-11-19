@@ -11,7 +11,7 @@ const menus = [
     { icon: InformationCircleIcon, key: 'about-menu', label: 'About Us', href: '/about' },
     { icon: PhoneIcon, key: 'contact-menu', label: 'Contact us', href: '/contact' },
     { icon: UserIcon, key: 'account-menu', label: 'My Account', href: '/profile' },
-    { icon: LoginIcon, key: 'login-menu', label: 'Login', href: '/login' }
+    // { icon: LoginIcon, key: 'login-menu', label: 'Login', href: '/login' }
 ];
 
 const adminMenus = [
@@ -45,14 +45,22 @@ export const Sidenav = () => {
         <div className="relative w-full bg-primary h-max text-white z-20">
             <div className="w-full flex flex-col sm:flex-row sm:justify-around">
                 <div className="w-full h-screen hidden lg:block">
-                    <ShoppingCartIcon className="h-6 w-6 z-30 absolute top-10 right-10 cursor-pointer" />
-                    <span className="absolute top-7 right-6 z-20 px-2 py-1 w-6 h-6 text-xs rounded-full text-white bg-secondary">0</span>
-                    <div className="flex items-center justify-start mx-6 mt-20">
-                        {/* <img className="h-10" src="/icons/rocket.svg" /> */}
-                        <span className="text-secondary ml-4 text-2xl font-bold">
-                            Lotus Traders
-                        </span>
-                    </div>
+                    <Link href="/cart">
+                        <a>
+                            <ShoppingCartIcon className="h-6 w-6 z-30 absolute top-10 right-10 cursor-pointer" />
+                            <span className="absolute top-7 right-6 z-20 px-2 py-1 w-6 h-6 text-xs rounded-full text-white bg-secondary">0</span>
+                        </a>
+                    </Link>
+
+                    <Link href="/">
+                        <a className="flex items-center justify-start mx-6 mt-20">
+                            <img src="/lotus-flower.png" className="w-10 h-10 p-1" alt="logo-alt" />
+                            <span className="text-secondary ml-4 text-2xl font-bold">
+                                Lotus Traders
+                            </span>
+                        </a>
+                    </Link>
+
                     <div className="my-3 px-4">
                         <input type="text" id="search-field" name="search-field" placeholder="Search" onKeyDown={handleSearch}
                             className="w-full bg-gray-100 rounded-xl border border-gray-300 focus:bg-white focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
@@ -109,8 +117,13 @@ export const Sidenav = () => {
                 <div className="w-full py-3 px-5 bg-primary z-10 fixed top-0 flex items-center lg:hidden">
                     <h1 className="text-secondary text-xl font-bold m-0">Lotus Traders</h1>
                     <div className="relative flex items-center justify-end ml-auto mr-6">
-                        <span className="absolute -top-3 -right-3 z-10 px-2 py-1 w-6 h-6 text-xs rounded-full text-white bg-secondary">0</span>
-                        <ShoppingCartIcon className="h-6 w-6 z-20 cursor-pointer text-white" />
+                        <Link href="/cart">
+                            <a>
+                                <span className="absolute -top-3 -right-3 z-10 px-2 py-1 w-6 h-6 text-xs rounded-full text-white bg-secondary">0</span>
+                                <ShoppingCartIcon className="h-6 w-6 z-20 cursor-pointer text-white" />
+                            </a>
+                        </Link>
+
                     </div>
                     <MenuAlt3Icon className="h-6 w-6 mr-0 text-white" onClick={() => setOpenMobMenu(true)} />
                 </div>

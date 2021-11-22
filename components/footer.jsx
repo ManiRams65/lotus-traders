@@ -9,12 +9,14 @@ export const Footer = () => {
             <div className="container px-5 py-10 lg:py-16 mx-auto hidden lg:block">
                 <div className="flex flex-wrap md:text-left text-center order-first">
                     <div className="lg:w-3/4 md:w-1/2 w-full px-4 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
-                        <Link href="/">
-                            <a className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
-                                <img src="/lotus-flower.png" className="w-10 h-10 p-1" alt="logo-alt" />
-                                <span className="ml-3 text-xl text-primary">Lotus Traders</span>
-                            </a>
-                        </Link>
+                        <div className="title-font font-medium items-center md:justify-start justify-center text-gray-900">
+                            <Link href="/">
+                                <a className="flex items-center w-max">
+                                    <img src="/lotus-flower.png" className="w-10 h-10 p-1" alt="logo-alt" />
+                                    <span className="ml-3 text-xl text-primary">Lotus Traders</span>
+                                </a>
+                            </Link>
+                        </div>
                         <p className="mt-2 text-sm text-gray-500"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam fugiat ex accusamus recusandae doloremque aliquid natus, exercitationem animi facere voluptatum accusantium reiciendis provident dignissimos praesentium nulla saepe error vitae cum? </p>
                     </div>
                     <div className="lg:w-1/4 md:w-1/2 text-center lg:text-left w-full px-4">

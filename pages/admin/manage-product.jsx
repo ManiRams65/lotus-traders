@@ -1,92 +1,138 @@
-/* This example requires Tailwind CSS v2.0+ */
-const people = [
-    {
-        name: 'Jane Cooper',
-        title: 'Regional Paradigm Technician',
-        department: 'Optimization',
-        role: 'Admin',
-        email: 'jane.cooper@example.com',
-        image:
-            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-    },
-    // More people...
-]
+import { ArrowLeftIcon } from '@heroicons/react/solid'
+import Link from 'next/link'
 
-export default function ManageProduct() {
+export default function ManageProduct({ isNew }) {
     return (
-        <div className="flex flex-col">
-            <div className="my-5 md:my-10 overflow-x-auto mx-6 lg:mx-8">
-                <h1>Admin Dashboard</h1>
-                <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                    <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
-                                <tr>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        Name
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        Title
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        Status
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        Role
-                                    </th>
-                                    <th scope="col" className="relative px-6 py-3">
-                                        <span className="sr-only">Edit</span>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {people.map((person) => (
-                                    <tr key={person.email}>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="flex items-center">
-                                                <div className="flex-shrink-0 h-10 w-10">
-                                                    <img className="h-10 w-10 rounded-full" src={person.image} alt="" />
-                                                </div>
-                                                <div className="ml-4">
-                                                    <div className="text-sm font-medium text-gray-900">{person.name}</div>
-                                                    <div className="text-sm text-gray-500">{person.email}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">{person.title}</div>
-                                            <div className="text-sm text-gray-500">{person.department}</div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                Active
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{person.role}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                                                Edit
-                                            </a>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+        <div className="flex flex-col py-8 px-2 lg:px-4">
+
+            <div className="px-2 mb-5 flex items-center">
+                <Link href="/admin/inventory">
+                    <ArrowLeftIcon className="h-6 w-6 mr-2 text-primary hover:text-secondary" />
+                </Link>
+                <h1 className="text-md font-bold text-primary">{isNew ? 'Add Product' : 'Edit Product'}</h1>
+            </div>
+
+            <div className="mt-5 md:mt-0 md:col-span-2">
+                <form action="#" method="POST">
+                    <div className="px-4 py-5 bg-white sm:p-6">
+                        <div className="grid grid-cols-12 gap-6">
+                            <div className="col-span-12">
+                                <h1 className="text-primary">
+                                    Product details
+                                </h1>
+                            </div>
+                            <div className="col-span-4 md:col-span-6">
+                                <label htmlFor="product-name" className="block text-sm font-medium text-gray-700">
+                                    Name
+                                </label>
+                                <input type="text" name="product-name" id="product-name"
+                                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                />
+                            </div>
+
+                            <div className="col-span-4 md:col-span-6">
+                                <label htmlFor="product-description" className="block text-sm font-medium text-gray-700">
+                                    Description
+                                </label>
+                                <input type="text" name="product-description" id="product-description"
+                                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                />
+                            </div>
+
+                            <div className="col-span-4 md:col-span-6">
+                                <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+                                    Category
+                                </label>
+                                <select id="country" name="country" autoComplete="country-name"
+                                    className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                >
+                                    <option>Chairs</option>
+                                    <option>Boards</option>
+                                    <option>Flowers pots</option>
+                                    <option>Hangings</option>
+                                </select>
+                            </div>
+
+                            <div className="col-span-4 md:col-span-6">
+                                <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+                                    Size
+                                </label>
+                                <select id="country" name="country" autoComplete="country-name"
+                                    className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                >
+                                    <option>Small</option>
+                                    <option>Medium</option>
+                                    <option>Large</option>
+                                    <option>Extra Large</option>
+                                </select>
+                            </div>
+
+                            <div className="col-span-12">
+                                <label
+                                    htmlFor="file-upload"
+                                    className="relative py-2 px-4 cursor-pointer bg-indigo-100 rounded font-medium text-indigo-500 hover:bg-indigo-400 hover:text-white focus-within:outline-none focus-within:ring-none"
+                                >
+                                    <span>Upload images</span>
+                                    <input id="file-upload" name="file-upload" type="file" accept="image/*" multiple className="sr-only" />
+                                </label>
+                            </div>
+
+                            <div className="mt-10 col-span-12">
+                                <h1 className="text-primary">
+                                    Pricing details
+                                </h1>
+                            </div>
+
+                            <div className="col-span-4 md:col-span-6">
+                                <label htmlFor="product-price" className="block text-sm font-medium text-gray-700">
+                                    Price (per unit)
+                                </label>
+                                <input type="text" name="product-price" id="product-price" autoComplete="email"
+                                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                />
+                            </div>
+
+                            <div className="col-span-4 md:col-span-6">
+                                <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+                                    Billing unit
+                                </label>
+                                <select id="country" name="country" autoComplete="country-name"
+                                    className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                >
+                                    <option>Hour</option>
+                                    <option>Day</option>
+                                    <option>Week</option>
+                                    <option>Month</option>
+                                </select>
+                            </div>
+
+                        </div>
                     </div>
+                    <div className="px-4 py-3 text-right sm:px-6">
+                        <button type="submit"
+                            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white hover:text-black bg-primary hover:bg-secondary focus:outline-none focus:ring-none"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div className="hidden sm:block" aria-hidden="true">
+                <div className="py-5">
+                    <div className="border-t border-gray-200" />
                 </div>
             </div>
         </div>
     )
+}
+
+export async function getServerSideProps(ctx) {
+    const { isNew, id } = ctx.query;
+
+    return {
+        props: {
+            isNew: isNew
+        },
+    };
 }

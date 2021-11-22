@@ -1,7 +1,14 @@
 /* This example requires Tailwind CSS v2.0+ */
+import Link from 'next/link'
 import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
+import { useSelector, useDispatch } from 'react-redux'
+import {
+    incrementQuantity,
+    decrementQuantity,
+    removeFromCart,
+} from '../../redux/cart.slice'
 
 const products = [
     {
@@ -27,7 +34,11 @@ const products = [
     }
 ]
 
-export default function Example() {
+export default function Cart() {
+
+    const cart = useSelector((state) => state.cart);
+
+    const dispatch = useDispatch();
 
     return (
         <main className="w-full grid grid-cols-12 gap-4 py-3 lg:py-10">
@@ -39,7 +50,7 @@ export default function Example() {
                 <div className="mt-8">
                     <div className="flow-root">
                         <ul role="list" className="-my-6 divide-y divide-gray-200">
-                            {products.map((product) => (
+                            {cart && cart.map((product) => (
                                 <li key={product.id} className="py-6 flex">
                                     <div className="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
                                         <img src={product.imageSrc} alt={product.imageAlt}
@@ -60,7 +71,7 @@ export default function Example() {
                                             <p className="text-gray-500">Qty {product.quantity}</p>
 
                                             <div className="flex">
-                                                <button type="button" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                                <button type="button" className="font-medium text-indigo-600 hover:text-indigo-500" onClick={() => dispatch(removeFromCart(product))}>
                                                     Remove
                                                 </button>
                                             </div>
@@ -81,12 +92,12 @@ export default function Example() {
                     </div>
                     <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                     <div className="mt-6">
-                        <a
-                            href="#"
-                            className="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-                        >
-                            Checkout
-                        </a>
+                        <Link href="/cart/checkout">
+                            <a className="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                            >
+                                Checkout
+                            </a>
+                        </Link>
                     </div>
                 </div>
             </div>

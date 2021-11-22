@@ -1,4 +1,5 @@
-/* This example requires Tailwind CSS v2.0+ */
+import Link from 'next/link'
+
 const people = [
   {
     name: 'Jane Cooper',
@@ -16,8 +17,18 @@ export default function Inventory() {
   return (
     <div className="flex flex-col">
       <div className="my-5 md:my-10 overflow-x-auto mx-6 lg:mx-8">
-        <h1>Inventory</h1>
-        <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+        <div className="px-2 py-1 mb-2 w-full flex items-center justify-between">
+          <h1 className="text-md font-bold">Inventory</h1>
+          <Link href={{
+            pathname: '/admin/manage-product',
+            query: { isNew: true },
+          }}>
+            <button className="px-2 py-1 flex items-center text-white bg-green-500 rounded focus:outline-none focus:ring-none hover:shadow-xl">
+              + <span className="ml-2">Add product</span>
+            </button>
+          </Link>
+        </div>
+        <div className="py-2 align-middle inline-block min-w-full px-2 lg:px-4">
           <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">

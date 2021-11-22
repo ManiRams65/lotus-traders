@@ -4,6 +4,7 @@ import { HomeIcon, ShoppingBagIcon, ShoppingCartIcon, InformationCircleIcon, Pho
 import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
+import { useSelector, useDispatch } from 'react-redux'
 
 const menus = [
     { icon: HomeIcon, key: 'home-menu', label: 'Home', href: '/' },
@@ -23,6 +24,10 @@ const adminMenus = [
 
 export const Sidenav = () => {
     const [openMobMenu, setOpenMobMenu] = useState(false)
+
+    const cart = useSelector((state) => state.cart);
+
+    const dispatch = useDispatch();
 
     const handleSearch = (e, mob) => {
         if (e.key === 'Enter') {
@@ -48,7 +53,7 @@ export const Sidenav = () => {
                     <Link href="/cart">
                         <a>
                             <ShoppingCartIcon className="h-6 w-6 z-30 absolute top-10 right-10 cursor-pointer" />
-                            <span className="absolute top-7 right-6 z-20 px-2 py-1 w-6 h-6 text-xs rounded-full text-white bg-secondary">0</span>
+                            <span className="absolute top-7 right-6 z-20 px-2 py-1 w-6 h-6 text-xs rounded-full text-white bg-secondary">{cart.length}</span>
                         </a>
                     </Link>
 

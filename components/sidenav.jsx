@@ -119,18 +119,24 @@ export const Sidenav = () => {
                     </div>
                 </div>
 
-                <div className="w-full py-3 px-5 bg-primary z-10 fixed top-0 flex items-center lg:hidden">
-                    <h1 className="text-secondary text-xl font-bold m-0">Lotus Traders</h1>
-                    <div className="relative flex items-center justify-end ml-auto mr-6">
-                        <Link href="/cart">
-                            <a>
-                                <span className="absolute -top-3 -right-3 z-10 px-2 py-1 w-6 h-6 text-xs rounded-full text-white bg-secondary">0</span>
-                                <ShoppingCartIcon className="h-6 w-6 z-20 cursor-pointer text-white" />
-                            </a>
-                        </Link>
+                <div className="w-full bg-primary pt-3 pb-1 z-10 fixed top-0 lg:hidden">
+                    <div className="w-full flex items-center px-5">
+                        <h1 className="text-secondary text-xl font-bold m-0">Lotus Traders</h1>
+                        <div className="flex items-center justify-end ml-auto mr-6">
+                            <Link href="/cart">
+                                <a className="relative">
+                                    <span className="absolute -top-2 -right-2 z-10 px-1 w-max h-max text-xs rounded-full text-white bg-secondary">{cart.length}</span>
+                                    <ShoppingCartIcon className="h-6 w-6 z-20 cursor-pointer text-white" />
+                                </a>
+                            </Link>
 
+                        </div>
+                        <MenuAlt3Icon className="h-6 w-6 mr-0 text-white" onClick={() => setOpenMobMenu(true)} />
                     </div>
-                    <MenuAlt3Icon className="h-6 w-6 mr-0 text-white" onClick={() => setOpenMobMenu(true)} />
+                    <div className="w-full mt-2 px-2">
+                        <input type="text" id="search-field" name="search-field" placeholder="Search" onKeyDown={($event) => handleSearch($event, true)}
+                            className="w-full bg-gray-100 rounded ring-0 border-0 focus:ring-0 focus:border-0 text-base outline-none focus:outline-none text-gray-700 py-1 px-2 text-sm" />
+                    </div>
                 </div>
 
                 <Transition.Root show={openMobMenu} as={Fragment}>
@@ -180,10 +186,10 @@ export const Sidenav = () => {
                                                         <img className="h-10" src="/icons/rocket.svg" /> 
 
                                                     </div>*/}
-                                                    <div className="mt-10 px-4">
+                                                    {/* <div className="mt-10 px-4">
                                                         <input type="text" id="search-field" name="search-field" placeholder="Search" onKeyDown={($event) => handleSearch($event, true)}
                                                             className="w-full bg-gray-100 rounded-xl border border-gray-300 focus:bg-white focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
-                                                    </div>
+                                                    </div> */}
 
                                                     <nav className="mt-8 px-6 text-white">
                                                         {getMenus().map((menu, index) => (

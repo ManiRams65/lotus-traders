@@ -10,7 +10,7 @@ function MyApp({ Component, pageProps }) {
       <div className="w-full lg:w-1/5 lg:h-full">
         <Sidenav />
       </div>
-      <div className="w-full mt-16 lg:mt-0 lg:w-4/5 lg:h-full overflow-y-auto">
+      <div className="w-full mt-20 lg:mt-0 lg:w-4/5 lg:h-full overflow-y-auto">
         <Component {...pageProps} />
         <Footer />
       </div>

@@ -39,7 +39,7 @@ const orders = [
 export default function About() {
     const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
-        currency: 'INR',
+        currency: 'USD',
         minimumFractionDigits: 2
     });
     return (
@@ -54,7 +54,7 @@ export default function About() {
 
                 <div className="flex items-center px-3">
                     <Link href="/profile">
-                        <ArrowLeftIcon className="h-6 w-6 mr-3 hover:text-secondary" />
+                        <a><ArrowLeftIcon className="h-6 w-6 mr-3 hover:text-secondary" /></a>
                     </Link>
                     <h3 className="text-lg font-bold text-primary capitalize">Your orders</h3>
                 </div>
@@ -64,10 +64,17 @@ export default function About() {
                         <div className="grid grid-cols-12 border rounded mb-2">
                             <div className="col-span-12 lg:col-span-4 text-gray-500 p-4">
                                 <p className="py-1">
-                                    order id: &nbsp; <span className="text-gray-900 hover:text-indigo-700 hover:cursor-pointer">{order.id}</span>
+                                    order id: &nbsp;  <Link
+                                        href={{
+                                            pathname: `/profile/orders/${order.id}`,
+                                            query: { id: order.id },
+                                        }}
+                                    >
+                                        <a className="text-gray-900 hover:text-indigo-700 hover:cursor-pointer">{order.id}</a>
+                                    </Link>
                                 </p>
                                 <p className="pt-1 pb-2">
-                                    status: &nbsp; <span className="capitalize hover:cursor-pointer">
+                                    status: &nbsp; <span className="capitalize">
                                         {order.status == 0 ? <span className="text-yellow-600">Pending</span> : order.status == 1 ? <span className="text-green-600">accepted</span> : <span className="text-red-600">rejected</span>}
                                     </span>
                                 </p>
@@ -87,7 +94,14 @@ export default function About() {
                                         <div>
                                             <p className="capitalize">{order.productList[0].name}</p>
                                             {order.productList && order.productList.length > 1 ?
-                                                <p className="text-indigo-400 hover:text-indigo-600 hover:cursor-pointer">+ {order.productList.length - 1} more. </p> : ''}
+                                                <Link
+                                                    href={{
+                                                        pathname: `/profile/orders/${order.id}`,
+                                                        query: { id: order.id },
+                                                    }}>
+                                                    <a className="text-indigo-400 hover:text-indigo-600 hover:cursor-pointer">
+                                                        + {order.productList.length - 1} more.
+                                                    </a></Link> : ''}
                                         </div>
                                     </div> : ''}
                             </div>

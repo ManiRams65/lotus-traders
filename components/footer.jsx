@@ -46,7 +46,7 @@ export const Footer = () => {
                 </div>
             </div>
             <div className="bg-gray-100">
-                <div className="container px-5 py-6 mx-auto flex items-center sm:flex-row flex-col">
+                <div className="container px-5 py-4 mx-auto flex items-center sm:flex-row flex-col">
                     <Link href="/">
                         <a className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
                             <img src="/lotus-flower.png" className="w-10 h-10 p-1" alt="logo-alt" />

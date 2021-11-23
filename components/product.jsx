@@ -32,7 +32,7 @@ export const Product = ({ product }) => {
                     </div>
                 </div>
             </Link>
-            <RentalDialogue product={product} openDialogue={false} removeBut={false} />
+            <RentalDialogue product={product} openDialogue={false} removeBut={true} />
         </div>
 
     )

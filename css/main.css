@@ -1,0 +1,48 @@
+@import url("https://fonts.googleapis.com/css2?family=Carattere&display=swap");
+
+@font-face {
+  font-family: "Algerian";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Algerian"), url(/fonts/algerian-regular.ttf) format("ttf");
+}
+
+@font-face {
+  font-family: "Edwardian Script ITC";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Edwardian Script ITC"),
+    url(/fonts/edwardian-script-itc-regular.ttf) format("ttf");
+}
+
+.font-algerian {
+  font-family: "Algerian";
+}
+
+.font-edwardian {
+  font-family: "Edwardian Script ITC";
+}
+
+.font-carattere {
+  font-family: "Carattere", cursive;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--in-range,
+.react-datepicker__day--keyboard-selected {
+  background: #e868a3 !important;
+}
+
+.react-datepicker__header {
+  background-color: #e868a3 !important;
+}
+
+.react-datepicker__current-month {
+  color: white !important;
+}
+
+.react-datepicker__day-name {
+  color: white !important;
+}

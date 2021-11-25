@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Product } from '../components/product';
 import { productsMock } from '../mock/data';
+import { baseUrl, formatter } from '../config/config'
 
 export default function Home({ featured }) {
 
@@ -16,7 +17,7 @@ export default function Home({ featured }) {
         <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
           <div className="grid gap-10 lg:grid-cols-2">
             <div className="flex flex-col justify-center md:pr-8 xl:pr-0 lg:max-w-lg">
-              <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-tertiary hidden md:flex">
+              <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-primary-three text-white hidden md:flex">
                 <svg className="text-teal-900 w-7 h-7" viewBox="0 0 24 24">
                   <polyline fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
                     strokeMiterlimit="10" points=" 8,5 8,1 16,1 16,5" strokeLinejoin="round" />
@@ -86,7 +87,7 @@ export default function Home({ featured }) {
 
             <div className="w-full lg:w-3/6">
               <div className="lg:max-w-lg">
-                <h1 className="text-2xl font-semibold text-gray-800 uppercase dark:text-white lg:text-3xl">Best place to rent <span className="text-tertiary">Products</span></h1>
+                <h1 className="text-2xl font-semibold text-gray-800 uppercase dark:text-white lg:text-3xl">Best place to rent <span className="text-primary-one">Products</span></h1>
                 <p className="mt-2 text-gray-600 dark:text-gray-400">
                   Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident ullam animi reiciendis iure similique amet dolor a aliquid ex illum, id repellat culpa saepe obcaecati et consectetur odit eos vitae.
                 </p>
@@ -96,8 +97,8 @@ export default function Home({ featured }) {
         </div>
 
         <div className="bg-white py-4 px-1 md:px-6 w-full">
-          <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">Featured products</h2>
-          <div className="mt-6 grid grid-cols-12 gap-6">
+          <h2 className="text-4xl font-carattere font-extrabold tracking-tight text-secondary-one">Featured products</h2>
+          <div className="mt-1 grid grid-cols-12 gap-6">
             {featured && featured.map((product) => (
               <Product key={'featured' + product.id} product={product} />
             ))}
@@ -105,8 +106,8 @@ export default function Home({ featured }) {
         </div>
 
         <div className="bg-white py-4 px-1 md:px-6 w-full">
-          <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">Top rented products</h2>
-          <div className="mt-6 grid grid-cols-12 gap-6">
+          <h2 className="text-4xl font-carattere font-extrabold tracking-tight text-secondary-one">Top rented products</h2>
+          <div className="mt-1 grid grid-cols-12 gap-6">
             {featured && featured.map((product) => (
               <Product key={'top rented' + product.id} product={product} />
             ))}
@@ -114,8 +115,8 @@ export default function Home({ featured }) {
         </div>
 
         <div className="py-4 px-1 md:px-6 bg-white w-full">
-          <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">New products</h2>
-          <div className="mt-6 grid grid-cols-12 gap-6">
+          <h2 className="text-4xl font-carattere font-extrabold tracking-tight text-secondary-one">New products</h2>
+          <div className="mt-1 grid grid-cols-12 gap-6">
             {featured && featured.map((product) => (
               <Product key={'new products' + product.id} product={product} />
             ))}
@@ -128,14 +129,13 @@ export default function Home({ featured }) {
 
 
 export async function getServerSideProps(ctx) {
-  // // request posts from api
-  // let response = await fetch(`${baseUrl}/api/products?limit=4`);
-  // // extract the data
-  // let result = await response.json();
+  let response = await fetch(`${baseUrl}/products`);
+  // extract the data
+  let result = await response.json();
 
   return {
     props: {
-      featured: productsMock,
+      featured: result,
     },
   };
 }

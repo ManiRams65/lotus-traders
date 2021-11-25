@@ -11,6 +11,6 @@ module.exports = withPWA({
         buildExcludes: [/middleware-manifest\.json$/]
     },
     images: {
-        domains: ['images.freeimages.com'],
+        domains: ['images.freeimages.com', 'res.cloudinary.com'],
     },
 })

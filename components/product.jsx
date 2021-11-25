@@ -10,6 +10,11 @@ export const Product = ({ product }) => {
         minimumFractionDigits: 2
     });
 
+    const getImgSrc = (prod) => {
+        const imgObj = prod.images[0]
+        return imgObj && imgObj.url ? (imgObj.url).toString() : null;
+    }
+
     const cart = useSelector((state) => state.cart);
 
     return (
@@ -18,8 +23,10 @@ export const Product = ({ product }) => {
             <Link href={`/product/${product.id}`}>
                 <div className="w-full relative text-left">
                     <div className="h-40 md:h-60 lg:h-72 xl:h-96 w-full relative overflow-hidden cursor-pointer">
-                        <Image src={product.image} alt={product.title} layout='fill'
-                            objectFit='contain' className="h-full !w-auto mx-auto group-hover:opacity-75" />
+                        {product.images ? <Image src={getImgSrc(product)} alt={product.title} layout='fill'
+                            objectFit='contain' className="h-full !w-auto mx-auto group-hover:opacity-75" /> :
+                            <Image src="/img-placeholder.png" alt={product.title} layout='fill'
+                                objectFit='contain' className="h-full !w-auto mx-auto group-hover:opacity-75" />}
                     </div>
                     <div className="p-4">
                         <h3 className="text-md text-gray-900">

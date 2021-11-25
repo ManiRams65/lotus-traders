@@ -3,11 +3,17 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { removeFromCart } from '../../redux/cart.slice'
+import axios from 'axios'
+import { parseCookies } from "../../config/auth-helper"
+import { baseUrl } from '../../config/config'
 
-export default function Cart() {
+export default function Cart({ cartItems }) {
     const cart = useSelector((state) => state.cart);
+    console.log(cart)
     const dispatch = useDispatch();
     const [total, setTotal] = useState(0);
+
+    console.log(cartItems);
 
     const getTotal = () => {
         let tot = 0;
@@ -97,4 +103,30 @@ export default function Cart() {
             </div>
         </main>
     )
+}
+
+export async function getServerSideProps(ctx) {
+    const { req, res } = ctx
+    const data = parseCookies(req)
+
+    if (res) {
+        if (Object.keys(data).length === 0 && data.constructor === Object) {
+            res.writeHead(301, { Location: "/" })
+            res.end()
+        }
+    }
+    const config = {
+        headers: { Authorization: `Bearer ${data['token']}` }
+    }
+
+    let response = await axios.get(`${baseUrl}/carts`, config);
+    console.log(response);
+    // extract the data
+    let result = response.data;
+
+    return {
+        props: {
+            cartItems: result,
+        },
+    };
 }

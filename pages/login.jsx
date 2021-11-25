@@ -1,8 +1,82 @@
 import Head from 'next/head'
-import { useState } from 'react'
+import React, { useState } from 'react'
+import { baseUrl } from '../config/config'
+import axios from 'axios';
+import { useCookies } from 'react-cookie'
+import Router from 'next/router'
+import Loader from '../components/loader'
+import { useForm } from "react-hook-form";
 
 export default function Login() {
     const [type, setType] = useState('login');
+    const [cookie, setCookie] = useCookies(['user'])
+    // const [tCookie, setTCookie] = useCookies(['token'])
+    const [loader, setLoader] = useState(false)
+    const [loadingText, setLoadingText] = useState("Loading")
+    const { register, formState: { errors }, handleSubmit } = useForm();
+
+    if (cookie && cookie.user) {
+        Router.push("/profile")
+    }
+
+    const onSignIn = (obj) => {
+        setLoadingText("Creating account... Please wait...");
+        setLoader(true);
+        axios.post(`${baseUrl}/auth/register`, obj).then(async ({ data }) => {
+            await onSuccess(data);
+            const config = {
+                headers: { Authorization: `Bearer ${data.token}` }
+            }
+            axios.post(`${baseUrl}/carts`, data, config)
+                .then(resp => setCookie('cart', JSON.stringify(resp.data), { path: "/", maxAge: 172800000, sameSite: true }))
+                .catch(err => console.log(err));
+        }).catch(err => { setLoader(false); console.log(err) });
+    }
+
+    const onLogin = (e) => {
+        e.preventDefault();
+        setLoadingText("Authenticating... Please wait...");
+        setLoader(true);
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const obj = { username: email, password }
+        axios.post(`${baseUrl}/auth/login`, obj).then(async ({ data }) => {
+            await onSuccess(data);
+            const config = {
+                headers: { Authorization: `Bearer ${data.token}` }
+            }
+            axios.get(`${baseUrl}/carts`, config)
+                .then(resp => {
+                    setCookie('cart', JSON.stringify(resp.data), { path: "/", maxAge: 172800000, sameSite: true });
+                    Router.push("/profile");
+                }).catch(err => { setLoader(false); console.log(err) });
+        }).catch(err => { setLoader(false); console.log(err) });
+    }
+
+    const onSuccess = async (user) => {
+        const userObj = {
+            email: user.email,
+            firstName: user.firstName,
+            id: user.id,
+            lastName: user.lastName
+        }
+        setCookie('user', JSON.stringify(userObj), { path: "/", maxAge: 172800000, sameSite: true })
+        setCookie('token', user.token, { path: "/", httpOnly: true, maxAge: 172800000, sameSite: true })
+        setLoader(false);
+        return true;
+    }
+
+    const onForgotPassword = (e) => {
+        e.preventDefault();
+        setLoadingText("Sending new password through mail... Please wait...");
+        setLoader(true);
+        const email = document.getElementById('forgot-email').value;
+        axios.post(`${baseUrl}/auth/reset-password`, { email }).then(res => {
+            console.log(res);
+            setLoader(false);
+        }).catch(err => console.log(err));
+    }
+
     return (
         <div className="w-full flex flex-col items-center justify-center h-full">
             <Head>
@@ -11,38 +85,57 @@ export default function Login() {
             </Head>
 
             <main className="w-full h-full flex flex-col items-center justify-center flex-1 bg-gray-100">
+                {loader && <Loader text={loadingText} />}
                 <div className="w-full px-4 pt-5 pb-1 mx-auto mt-8 mb-6 bg-white rounded-none shadow-xl sm:rounded-lg sm:w-10/12 md:w-8/12 lg:w-6/12 xl:w-5/12 sm:px-6">
                     {type && type == 'login' ? <div>
                         <h1 className="mb-4 text-lg font-semibold text-left text-primary">Log in to your account</h1>
                         <form className="mb-8 space-y-6">
                             <label className="block">
                                 <span className="block mb-2 text-sm font-medium text-gray-700">Your Email</span>
-                                <input className="form-input w-full px-3 py-2" type="email" placeholder="Ex. james@bond.com" inputmode="email" required />
+                                <input className="form-input w-full px-3 py-2" type="email" id="login-email" placeholder="Ex. james@bond.com" inputMode="email" required />
                             </label>
                             <label className="block">
                                 <span className="block mb-2 text-sm font-medium text-gray-700">Your Password</span>
-                                <input className="form-input w-full px-3 py-2" type="password" placeholder="••••••••" required />
+                                <input className="form-input w-full px-3 py-2" type="password" id="login-password" placeholder="••••••••" required />
                             </label>
-                            <input type="submit" className="w-full py-2 mt-1 text-secondary bg-primary" value="Login" />
+                            <input type="submit" onClick={(e) => onLogin(e)} className="w-full py-2 mt-1 text-secondary bg-primary hover:cursor-pointer hover:shadow-xl hover:text-white" value="Login" />
                         </form>
                     </div> : ''}
 
                     {type && type == 'signup' ? <div>
                         <h1 className="mb-4 text-lg font-semibold text-left text-primary">Create account</h1>
-                        <form className="mb-8 space-y-6">
-                        <label className="block">
-                                <span className="block mb-2 text-sm font-medium text-gray-700">Your Name</span>
-                                <input className="form-input w-full px-3 py-2" type="text" placeholder="James" inputmode="text" required />
+                        <form className="mb-8 space-y-2" onSubmit={handleSubmit(onSignIn)}>
+                            <label className="block">
+                                <span className="block mb-2 text-sm font-medium text-gray-700">First Name</span>
+                                <input className="form-input w-full px-3 py-2" type="text"
+                                    {...register("firstName", { required: true })} id="signin-firstname" placeholder="James" />
                             </label>
+                            <p className="mt-1 text-red-500 text-sm">{errors.firstName && "First name is required."}</p>
+                            <label className="block">
+                                <span className="block mb-2 text-sm font-medium text-gray-700">Last Name</span>
+                                <input className="form-input w-full px-3 py-2" type="text"
+                                    {...register("lastName", { required: true })} id="signin-lastname" placeholder="Carter" />
+                            </label>
+                            <p className="mt-1 text-red-500 text-sm">{errors.lastName && "Last name is required."}</p>
                             <label className="block">
                                 <span className="block mb-2 text-sm font-medium text-gray-700">Your Email</span>
-                                <input className="form-input w-full px-3 py-2" type="email" placeholder="Ex. james@bond.com" inputmode="email" required />
+                                <input className="form-input w-full px-3 py-2" type="email"
+                                    {...register("email", { required: true })} id="signin-email" placeholder="Ex. james@gmail.com" />
                             </label>
+                            <p className="mt-1 text-red-500 text-sm">{errors.email && "Email is required."}</p>
                             <label className="block">
                                 <span className="block mb-2 text-sm font-medium text-gray-700">Your Password</span>
-                                <input className="form-input w-full px-3 py-2" type="password" placeholder="••••••••" required />
+                                <input className="form-input w-full px-3 py-2" type="password"
+                                    {...register("password", { required: true })} id="signin-password" placeholder="••••••••" />
                             </label>
-                            <input type="submit" className="w-full py-2 mt-1 text-secondary bg-primary" value="Signin" />
+                            <p className="mt-1 text-red-500 text-sm">{errors.password && "Password is required."}</p>
+                            <label className="block">
+                                <span className="block mb-2 text-sm font-medium text-gray-700">Phone</span>
+                                <input className="form-input w-full px-3 py-2" type="number"
+                                    {...register("phone", { required: true })} id="signin-phone" placeholder="(+45) 455-34-3432" />
+                            </label>
+                            <p className="mt-1 text-red-500 text-sm">{errors.phone && "Phone number is required."}</p>
+                            <input type="submit" className="w-full py-2 mt-1 text-secondary bg-primary hover:cursor-pointer hover:shadow-xl hover:text-white" value="Signin" />
                         </form>
                     </div> : ''}
 
@@ -52,19 +145,18 @@ export default function Login() {
                         <form className="mb-8 space-y-6">
                             <label className="block">
                                 <span className="block mb-2 text-sm font-medium text-gray-700">Your Email</span>
-                                <input className="form-input w-full px-3 py-2" type="email" placeholder="Ex. james@bond.com" inputmode="email" required />
+                                <input className="form-input w-full px-3 py-2" type="email" id="forgot-email" placeholder="Ex. james@bond.com" inputMode="email" required />
                             </label>
-                            <input type="submit" className="w-full py-2 mt-1 text-secondary bg-primary" value="Change password" />
+                            <input type="submit" onClick={(e) => onForgotPassword(e)} className="w-full py-2 mt-1 text-secondary bg-primary hover:cursor-pointer hover:shadow-xl hover:text-white" value="Change password" />
                         </form>
                     </div> : ''}
 
                 </div>
                 <p className="mb-4 text-xs text-center text-gray-400">
-                    {type && type == 'login' ? <button className="text-primary underline hover:text-tertiary mr-4" onClick={() => setType('signup')}>Create an account</button> :
+                    {type && type == 'login' ? <button className="text-primary underline hover:text-tertiary mr-2" onClick={() => setType('signup')}>Create an account</button> :
                         <button className="text-primary underline hover:text-tertiary mr-4" onClick={() => setType('login')}>Login</button>}
-
-                    ·
-                    <button className="text-primary underline hover:text-tertiary mr-4" onClick={() => setType('forgot')}>Forgot password?</button>
+                    -
+                    <button className="text-primary underline hover:text-tertiary ml-2" onClick={() => setType('forgot')}>Forgot password?</button>
                 </p>
             </main>
         </div>

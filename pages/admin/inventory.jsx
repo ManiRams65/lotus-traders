@@ -1,21 +1,35 @@
 import Link from 'next/link'
+import { baseUrl, formatter } from '../../config/config'
+import { PencilIcon, TrashIcon } from '@heroicons/react/solid'
+import axios from 'axios';
+import { useState } from 'react';
+import Loader from '../../components/loader';
 
-const people = [
-  {
-    name: 'Jane Cooper',
-    title: 'Regional Paradigm Technician',
-    department: 'Optimization',
-    role: 'Admin',
-    email: 'jane.cooper@example.com',
-    image:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-  },
-  // More people...
-]
+export default function Inventory({ result }) {
+  const [products, setProducts] = useState(result);
+  const [loading, setLoading] = useState(false);
 
-export default function Inventory() {
+  const getImgSrc = (product) => {
+    const imgObj = product.images[0]
+    return imgObj && imgObj.url ? (imgObj.url).toString() : null;
+  }
+
+  const deleteProduct = (product) => {
+    setLoading(true);
+    axios.delete(`${baseUrl}/products/${product.id}`).then(res => {
+      setLoading(false)
+      const temp = products;
+      const indx = temp.findIndex(x => x.id == product.id);
+      temp.splice(indx, 1);
+      console.log(indx)
+      console.log(temp)
+      setProducts([...temp]);
+    }).catch(e => setLoading(false));
+  }
+
   return (
     <div className="flex flex-col">
+      {loading && <Loader text="Please wait..." />}
       <div className="my-5 md:my-10 overflow-x-auto mx-6 lg:mx-8">
         <div className="px-2 py-1 mb-2 w-full flex items-center justify-between">
           <h1 className="text-md font-bold">Inventory</h1>
@@ -37,25 +51,31 @@ export default function Inventory() {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
                     Title
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Status
+                    Currency
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Role
+                    Price per unit
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Discounted price
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Billing unit
                   </th>
                   <th scope="col" className="relative px-6 py-3">
                     <span className="sr-only">Edit</span>
@@ -63,33 +83,29 @@ export default function Inventory() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {people.map((person) => (
-                  <tr key={person.email}>
+                {products.map((product) => (
+                  <tr key={product.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="flex-shrink-0 h-10 w-10">
-                          <img className="h-10 w-10 rounded-full" src={person.image} alt="" />
-                        </div>
+                        {getImgSrc(product) && <div className="flex-shrink-0 h-10 w-10">
+                          <img className="h-10 w-10 rounded-full" src={getImgSrc(product)} alt={product.title} />
+                        </div>}
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">{person.name}</div>
-                          <div className="text-sm text-gray-500">{person.email}</div>
+                          <div className="text-sm font-medium text-gray-900">{product.title}</div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{person.title}</div>
-                      <div className="text-sm text-gray-500">{person.department}</div>
+                    <td className="px-6 py-4 text-center text-gray-500 whitespace-nowrap">
+                      {product.currency == '$' ? 'USD' : product.currency}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                        Active
-                      </span>
+                    <td className="px-6 py-4 text-gray-700 text-right whitespace-nowrap">
+                      {formatter.format(Number(product.pricePerUnit))}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{person.role}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                        Edit
-                      </a>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-700">{product.discountedPrice > 0 ? formatter.format(Number(product.discountedPrice)) : 'No discount'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">{product.billingUnit}</td>
+                    <td className="px-6 py-4 flex items-center justify-center">
+                      <PencilIcon className="h-6 w-6 text-yellow-500 hover:cursor-pointer hover:bg-yellow-50 mr-3" />
+                      <TrashIcon className="h-6 w-6 text-red-500 hover:cursor-pointer hover:bg-red-50" onClick={() => deleteProduct(product)} />
                     </td>
                   </tr>
                 ))}
@@ -100,4 +116,18 @@ export default function Inventory() {
       </div>
     </div>
   )
+}
+
+
+export async function getServerSideProps(ctx) {
+  // request products from api
+  let response = await fetch(`${baseUrl}/products`);
+  // extract the data
+  let result = await response.json();
+
+  return {
+    props: {
+      result
+    },
+  };
 }

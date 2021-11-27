@@ -53,14 +53,14 @@ export default function ProductPage({ prodObj, id }) {
         <div className="bg-white w-full">
             {product && <div className="w-full mt-6 grid grid-cols-12 gap-6">
 
-                {product.images && <div className="col-span-12 lg:col-span-5 px-2 pt-5">
+                {product.images.length > 0 && <div className="col-span-12 lg:col-span-5 px-2 pt-5">
                     <img
                         src={product.images[0].url}
                         alt={product.title}
                         className="w-full h-full object-center object-cover"
                     />
                 </div>}
-                {!product.image && <div className="col-span-12 lg:col-span-5 px-2 pt-5">
+                {product.images.length == 0 && <div className="col-span-12 lg:col-span-5 px-2 pt-5">
                     <img
                         src="/img-placeholder.png"
                         alt={product.title}
@@ -68,10 +68,10 @@ export default function ProductPage({ prodObj, id }) {
                     />
                 </div>}
                 <div className="col-span-12 lg:col-span-7 px-10 lg:px-2">
-                    <h1 className="text-xl font-bold my-1 tracking-tight text-gray-900 lg:text-2xl">{product.title}</h1>
+                    <h1 className="text-xl font-bold my-1 tracking-tight capitalize text-gray-900 lg:text-2xl">{product.title}</h1>
                     <p className="text-xl lg:text-2xl mt-5 my-2 text-primary">
                         <span className="text-gray-700 mr-1">{product.currency}</span>
-                        {product.discountedPrice ?
+                        {product.discountedPrice > 0 ?
                             <span>{product.discountedPrice}<span className="ml-3 text-gray-500 line-through text-lg">{product.currency}{product.pricePerUnit}</span></span> :
                             <span>{product.pricePerUnit}</span>}
                     </p>

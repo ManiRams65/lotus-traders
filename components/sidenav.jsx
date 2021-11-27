@@ -1,14 +1,15 @@
 import Link from 'next/link'
 import Router from 'next/router'
 import { HomeIcon, ShoppingBagIcon, ShoppingCartIcon, InformationCircleIcon, PhoneIcon, UserIcon, LoginIcon, ViewGridIcon, TableIcon, MenuAlt3Icon } from '@heroicons/react/solid'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { useSelector, useDispatch } from 'react-redux'
+import { fetchCart } from '../redux/cart.slice'
 
 const menus = [
     { icon: HomeIcon, key: 'home-menu', label: 'Home', href: '/' },
-    { icon: ShoppingBagIcon, key: 'cat-menu', label: 'Categories', href: '/categories' },
+    // { icon: ShoppingBagIcon, key: 'cat-menu', label: 'Categories', href: '/categories' },
     { icon: InformationCircleIcon, key: 'about-menu', label: 'About Us', href: '/about' },
     { icon: PhoneIcon, key: 'contact-menu', label: 'Contact us', href: '/contact' },
     { icon: UserIcon, key: 'account-menu', label: 'My Account', href: '/profile' },
@@ -28,6 +29,14 @@ export const Sidenav = () => {
     const cart = useSelector((state) => state.cart);
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        const loadCart = async () => {
+            await dispatch(fetchCart());
+        };
+        loadCart();
+        console.log(cart);
+    }, [dispatch]);
 
     const handleSearch = (e, mob) => {
         if (e.key === 'Enter') {
@@ -119,9 +128,9 @@ export const Sidenav = () => {
                     </div>
                 </div>
 
-                <div className="w-full bg-primary pt-3 pb-1 z-10 fixed top-0 lg:hidden">
+                <div className="w-full bg-primary-three pt-3 pb-1 z-10 fixed top-0 lg:hidden">
                     <div className="w-full flex items-center px-5">
-                        <h1 className="text-secondary text-xl font-bold m-0">Lotus Traders</h1>
+                        <h1 className="text-white text-xl font-algerian font-bold m-0">Lotus Traders</h1>
                         <div className="flex items-center justify-end ml-auto mr-6">
                             <Link href="/cart">
                                 <a className="relative">
@@ -164,11 +173,11 @@ export const Sidenav = () => {
                                     leaveFrom="translate-x-0"
                                     leaveTo="translate-x-full"
                                 >
-                                    <div className="w-screen max-w-sm">
-                                        <div className="h-full flex flex-col bg-primary shadow-xl overflow-y-scroll">
-                                            <div className="flex-1 py-4 overflow-y-auto px-4 sm:px-6">
+                                    <div className="w-screen max-w-xs">
+                                        <div className="h-full flex flex-col bg-primary-three shadow-xl overflow-y-scroll">
+                                            <div className="flex-1 py-4 overflow-y-auto px-4">
                                                 <div className="flex items-start justify-between">
-                                                    <Dialog.Title className="text-secondary text-xl font-bold">Lotus Traders</Dialog.Title>
+                                                    <Dialog.Title className="text-white font-algerian text-xl font-bold">Lotus Traders</Dialog.Title>
                                                     <div className="ml-3 h-7 flex items-center">
                                                         <button
                                                             type="button"
@@ -205,7 +214,7 @@ export const Sidenav = () => {
                                                             </Link>
                                                         ))}</nav>
 
-                                                    <div className="absolute text-white bottom-0 my-10 flex flex-row justify-center items-center w-full">
+                                                    <div className="absolute text-white left-0 bottom-10 flex flex-row justify-center items-center w-full">
                                                         <Link href="#">
                                                             <a className="mr-4 duration-300 hover:transform hover:scale-105 hover:text-secondary" target="_blank" rel="noreferrer">
                                                                 <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">

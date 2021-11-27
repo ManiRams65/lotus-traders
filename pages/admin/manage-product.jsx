@@ -33,15 +33,13 @@ export default function ManageProduct({ isNew }) {
     }
 
     const addProduct = (data, event) => {
-        console.log(data);
-        event.target.reset();
+        console.log(data, files.length);
         if (files.length > 0) {
             setLoading(true);
             let tempProd = Object.assign({}, data);
-            tempProd['metaData'] = metaData
+            tempProd['metadata'] = metaData
             axios.post(`${baseUrl}/products`, tempProd)
                 .then(res => {
-                    data.target.reset();
                     const formData = new FormData();
                     for (let i = 0; i < files.length; i++) {
                         formData.append("files", files[i]);

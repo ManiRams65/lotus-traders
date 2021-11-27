@@ -75,7 +75,7 @@ export default function Checkout() {
                     </div>
                     <div className="px-4 py-3 text-left sm:px-6">
                         <button type="submit"
-                            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white hover:text-black bg-primary hover:bg-secondary focus:outline-none focus:ring-none"
+                            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white hover:text-black bg-primary-three hover:bg-secondary focus:outline-none focus:ring-none"
                         >
                             Order
                         </button>

@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import React, { useState } from 'react'
-import { baseUrl } from '../config/config'
-import axios from 'axios';
+import helper from '../config/auth-helper'
+// import axios from 'axios';
 import { useCookies } from 'react-cookie'
 import Router from 'next/router'
 import Loader from '../components/loader'
@@ -22,12 +22,10 @@ export default function Login() {
     const onSignIn = (obj) => {
         setLoadingText("Creating account... Please wait...");
         setLoader(true);
-        axios.post(`${baseUrl}/auth/register`, obj).then(async ({ data }) => {
+        helper.axiosInstance.post('auth/register', obj).then(async ({ data }) => {
             await onSuccess(data);
-            const config = {
-                headers: { Authorization: `Bearer ${data.token}` }
-            }
-            axios.post(`${baseUrl}/carts`, data, config)
+
+            helper.axiosInstance.post(`carts`, data)
                 .then(resp => setCookie('cart', JSON.stringify(resp.data), { path: "/", maxAge: 172800000, sameSite: true }))
                 .catch(err => console.log(err));
         }).catch(err => { setLoader(false); console.log(err) });
@@ -40,12 +38,10 @@ export default function Login() {
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
         const obj = { username: email, password }
-        axios.post(`${baseUrl}/auth/login`, obj).then(async ({ data }) => {
+        helper.axiosInstance.post(`auth/login`, obj).then(async ({ data }) => {
             await onSuccess(data);
-            const config = {
-                headers: { Authorization: `Bearer ${data.token}` }
-            }
-            axios.get(`${baseUrl}/carts`, config)
+
+            helper.axiosInstance.get(`carts`)
                 .then(resp => {
                     setCookie('cart', JSON.stringify(resp.data), { path: "/", maxAge: 172800000, sameSite: true });
                     Router.push("/profile");
@@ -60,8 +56,9 @@ export default function Login() {
             id: user.id,
             lastName: user.lastName
         }
+        localStorage.setItem('token', user.token);
         setCookie('user', JSON.stringify(userObj), { path: "/", maxAge: 172800000, sameSite: true })
-        setCookie('token', user.token, { path: "/", httpOnly: true, maxAge: 172800000, sameSite: true })
+        setCookie('token', user.token, { path: "/", maxAge: 172800000, sameSite: true })
         setLoader(false);
         return true;
     }
@@ -98,7 +95,7 @@ export default function Login() {
                                 <span className="block mb-2 text-sm font-medium text-gray-700">Your Password</span>
                                 <input className="form-input w-full px-3 py-2" type="password" id="login-password" placeholder="••••••••" required />
                             </label>
-                            <input type="submit" onClick={(e) => onLogin(e)} className="w-full py-2 mt-1 text-secondary bg-primary hover:cursor-pointer hover:shadow-xl hover:text-white" value="Login" />
+                            <input type="submit" onClick={(e) => onLogin(e)} className="w-full py-2 mt-1 text-secondary bg-primary-three hover:cursor-pointer hover:shadow-xl hover:text-white" value="Login" />
                         </form>
                     </div> : ''}
 
@@ -135,7 +132,7 @@ export default function Login() {
                                     {...register("phone", { required: true })} id="signin-phone" placeholder="(+45) 455-34-3432" />
                             </label>
                             <p className="mt-1 text-red-500 text-sm">{errors.phone && "Phone number is required."}</p>
-                            <input type="submit" className="w-full py-2 mt-1 text-secondary bg-primary hover:cursor-pointer hover:shadow-xl hover:text-white" value="Signin" />
+                            <input type="submit" className="w-full py-2 mt-1 text-secondary bg-primary-three hover:cursor-pointer hover:shadow-xl hover:text-white" value="Signin" />
                         </form>
                     </div> : ''}
 
@@ -147,7 +144,7 @@ export default function Login() {
                                 <span className="block mb-2 text-sm font-medium text-gray-700">Your Email</span>
                                 <input className="form-input w-full px-3 py-2" type="email" id="forgot-email" placeholder="Ex. james@bond.com" inputMode="email" required />
                             </label>
-                            <input type="submit" onClick={(e) => onForgotPassword(e)} className="w-full py-2 mt-1 text-secondary bg-primary hover:cursor-pointer hover:shadow-xl hover:text-white" value="Change password" />
+                            <input type="submit" onClick={(e) => onForgotPassword(e)} className="w-full py-2 mt-1 text-secondary bg-primary-three hover:cursor-pointer hover:shadow-xl hover:text-white" value="Change password" />
                         </form>
                     </div> : ''}
 

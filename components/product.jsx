@@ -11,7 +11,7 @@ export const Product = ({ product }) => {
     });
 
     const getImgSrc = (prod) => {
-        const imgObj = prod.images[0]
+        const imgObj = prod.images.length > 0 ? prod.images[0] : null
         return imgObj && imgObj.url ? (imgObj.url).toString() : null;
     }
 
@@ -23,7 +23,7 @@ export const Product = ({ product }) => {
             <Link href={`/product/${product.id}`}>
                 <div className="w-full relative text-left">
                     <div className="h-40 md:h-60 lg:h-72 xl:h-96 w-full relative overflow-hidden cursor-pointer">
-                        {product.images ? <Image src={getImgSrc(product)} alt={product.title} layout='fill'
+                        {product.images.length > 0 ? <Image src={getImgSrc(product)} alt={product.title} layout='fill'
                             objectFit='contain' className="h-full !w-auto mx-auto group-hover:opacity-75" /> :
                             <Image src="/img-placeholder.png" alt={product.title} layout='fill'
                                 objectFit='contain' className="h-full !w-auto mx-auto group-hover:opacity-75" />}
@@ -34,7 +34,7 @@ export const Product = ({ product }) => {
                         </h3>
                         <p className="text-sm font-medium text-primary mt-4">
                             <span className="text-gray-700 mr-1">{product.currency}</span>
-                            {product.discountedPrice ? product.discountedPrice : product.pricePerUnit}
+                            {product.discountedPrice > 0 ? product.discountedPrice : product.pricePerUnit}
                         </p>
                     </div>
                 </div>

@@ -1,9 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
+import helper from '../config/auth-helper'
 
 const cartSlice = createSlice({
     name: 'cart',
     initialState: [],
     reducers: {
+        setCart: (state, action) => {
+            state.splice(0, state.length)
+            state.push(...action.payload);
+        },
         addToCart: (state, action) => {
             const itemExists = state.find((item) => item.product === action.payload.product);
             if (itemExists) {
@@ -35,8 +40,17 @@ const cartSlice = createSlice({
 export const cartReducer = cartSlice.reducer;
 
 export const {
+    setCart,
     addToCart,
     incrementQuantity,
     decrementQuantity,
     removeFromCart,
 } = cartSlice.actions;
+
+
+export const fetchCart = () => {
+    return async dispatch => {
+        const { data } = await helper.axiosInstance('carts');
+        dispatch(setCart(data.cartItems));
+    };
+};

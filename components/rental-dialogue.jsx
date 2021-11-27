@@ -53,7 +53,7 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
         axios.post(`${baseUrl}/carts/cart-item`, cart).then(async ({ data }) => {
             setLoader(false);
             console.log(data);
-            dispatch(addToCart(cart));
+            dispatch(addToCart(data));
             toast.success("Added to cart!!!")
             setOpen(false)
         }).catch(e => onErr(e))
@@ -72,7 +72,7 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
 
     const onErr = (err) => {
         console.log(err);
-        setLoading(false)
+        setLoader(false)
         toast.error("Some error occured, Try again!!!")
     }
 
@@ -110,7 +110,7 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
             </button>}
 
             <Transition.Root show={open} as={Fragment}>
-                <Dialog as="div" className="fixed z-50 inset-0 overflow-y-auto" onClose={setOpen}>
+                <Dialog as="div" className="fixed z-30 inset-0 overflow-y-auto" onClose={setOpen}>
                     <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                         <Transition.Child
                             as={Fragment}

@@ -28,31 +28,35 @@ export default function Profile({ data }) {
             </Head>
 
             <main className="w-full flex items-center justify-center bg-gray-200">
-                <div className="absolute top-0 w-4/5 h-60 z-10 bg-center bg-cover" style={{
+                <div className="absolute top-0 w-full lg:w-4/5 h-60 z-10 bg-center bg-cover" style={{
                     backgroundImage: "url('https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=2710&amp;q=80')"
                 }}>
                     <span id="blackOverlay" className="w-full h-full absolute opacity-50 bg-black"></span>
                 </div>
                 <section className="relative w-full z-20 py-16 px-4">
-                    <div className="bg-white w-full mb-6 shadow-xl rounded-lg mt-40">
+                    <div className="bg-white w-full mb-6 shadow-xl rounded-lg mt-20 lg:mt-40">
                         {user && <div className="px-6">
                             <div className="flex flex-wrap justify-center">
-                                <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
+                                {/* <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
                                     <div className="relative">
                                         <img alt="..." src="https://demos.creative-tim.com/notus-js/assets/img/team-2-800x800.jpg" className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px" />
                                     </div>
-                                </div>
-                                <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
+                                </div> */}
+                                <button onClick={signOut}
+                                    className="bg-red-500 mt-10 ml-auto mr-10 active:bg-red-600 uppercase text-white font-bold hover:shadow-xl text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150" type="button">
+                                    Sign out
+                                </button>
+                                {/* <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
                                     <div className="py-6 px-3 mt-32 sm:mt-0">
                                         <button onClick={signOut}
                                             className="bg-red-500 active:bg-red-600 uppercase text-white font-bold hover:shadow-xl text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150" type="button">
                                             Sign out
                                         </button>
                                     </div>
-                                </div>
-                                <div className="w-full lg:w-4/12 px-4 lg:order-1">
+                                </div> */}
+                                {/* <div className="w-full lg:w-4/12 px-4 lg:order-1">
                                     <div className="flex justify-center py-4 lg:pt-4 pt-8">
-                                        {/* <div className="mr-4 p-3 text-center">
+                                        <div className="mr-4 p-3 text-center">
                                             <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">22</span><span className="text-sm text-blueGray-400">Orders</span>
                                         </div>
                                         <div className="mr-4 p-3 text-center">
@@ -60,9 +64,9 @@ export default function Profile({ data }) {
                                         </div>
                                         <div className="lg:mr-4 p-3 text-center">
                                             <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">89</span><span className="text-sm text-blueGray-400">Comments</span>
-                                        </div> */}
+                                        </div> 
                                     </div>
-                                </div>
+                                </div>*/}
                             </div>
                             <div className="text-center mt-12">
                                 <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
@@ -80,10 +84,10 @@ export default function Profile({ data }) {
                                 </div> */}
                             </div>
                             <div className="mt-10 py-10 text-center">
-                                <div className="flex items-center justify-center">
+                                <div className="flex flex-col md:flex-row items-center justify-center">
                                     <Link href="/profile/orders">
-                                        <div className="mx-3 flex items-center bg-primary px-5 py-3 rounded-lg hover:cursor-pointer hover:shadow-xl">
-                                            <ShoppingBagIcon className="h-6 w-6 mr-4 text-secondary" />
+                                        <div className="mx-3 mb-5 flex items-center bg-secondary-three px-5 py-3 rounded-lg hover:cursor-pointer hover:shadow-xl">
+                                            <ShoppingBagIcon className="h-6 w-6 mr-4 text-white" />
                                             <span className="text-white">Orders</span>
                                         </div>
                                     </Link>
@@ -91,8 +95,8 @@ export default function Profile({ data }) {
                                         pathname: '/profile/manage-profile',
                                         query: { id: 1 },
                                     }}>
-                                        <div className="mx-3 flex items-center bg-primary px-5 py-3 rounded-lg hover:cursor-pointer hover:shadow-xl">
-                                            <PencilIcon className="h-6 w-6 mr-4 text-secondary" />
+                                        <div className="mx-3 flex items-center bg-secondary-three px-5 py-3 rounded-lg hover:cursor-pointer hover:shadow-xl">
+                                            <PencilIcon className="h-6 w-6 mr-4 text-white" />
                                             <span className="text-white">Manage Profile</span>
                                         </div>
                                     </Link>

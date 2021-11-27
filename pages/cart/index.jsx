@@ -4,14 +4,14 @@ import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { removeFromCart } from '../../redux/cart.slice'
 import axios from 'axios'
-import { parseCookies } from "../../config/auth-helper"
-import { baseUrl } from '../../config/config'
+import helper from "../../config/auth-helper"
+import { baseUrl, formatter } from '../../config/config'
+import { toast } from 'react-toastify'
 
-export default function Cart({ cartItems }) {
+export default function Cart({ cartItemsObj }) {
+    const [cartItems, setCartItems] = useState(cartItemsObj)
     const cart = useSelector((state) => state.cart);
-    console.log(cart)
     const dispatch = useDispatch();
-    const [total, setTotal] = useState(0);
 
     console.log(cartItems);
 
@@ -24,7 +24,17 @@ export default function Cart({ cartItems }) {
     }
 
     const removeItem = (item) => {
-        dispatch(removeFromCart(item))
+        helper.axiosInstance.delete(`carts/cart-item/${item.id}`)
+            .then(({ data }) => {
+                console.log(data)
+                setCartItems({ ...data });
+                dispatch(setCart(data.cartItems));
+                toast.success('Removed from cart')
+            })
+            .catch(err => {
+                console.log(err);
+                toast.error('Something wnet wrong.')
+            })
     }
 
     return (
@@ -37,11 +47,11 @@ export default function Cart({ cartItems }) {
                 <div className="mt-8">
                     <div className="flow-root">
                         <ul role="list" className="-my-6 divide-y divide-gray-200">
-                            {cart && cart.map((product) => (
-                                <li key={product.id} className="py-6 flex">
+                            {cartItems && cartItems.cartItems.map((item) => (
+                                <li key={item.id} className="py-6 flex">
                                     <div className="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
-                                        <img src={product.image} alt={product.image}
-                                            className="w-full h-full object-center object-cover" />
+                                        {item.product.images.length > 0 && <img src={item.product.images[0].url} alt={item.product.title}
+                                            className="w-full h-full object-center object-cover" />}
                                     </div>
 
                                     <div className="ml-4 flex-1 flex flex-col">
@@ -50,21 +60,30 @@ export default function Cart({ cartItems }) {
                                                 <h3>
                                                     <Link href={{
                                                         pathname: '/product-page',
-                                                        query: { id: product.id ? product.id : null },
+                                                        query: { id: item.product.id ? item.product.id : null },
                                                     }}>
-                                                        <a>{product.title}</a>
+                                                        <a className="capitalize hover:text-secondary-three">{item.product.title}</a>
                                                     </Link>
                                                 </h3>
                                                 <p className="ml-4">
-                                                    <span className="text-gray-700 mr-1">{product.currency}</span>
-                                                    {product.discountedPrice ? product.discountedPrice : product.pricePerUnit}</p>
+                                                    {/* <span className="text-gray-700 mr-1">{item.product.currency}</span>{item.productTotal} */}
+                                                    {formatter.format(Number(item.productTotal))}
+                                                </p>
                                             </div>
                                         </div>
                                         <div className="flex-1 flex items-end justify-between text-sm">
-                                            <p className="text-gray-500">Qty {product.quantity}</p>
+                                            <p className="text-gray-500">Duration {item.duration}</p>
+                                            <p className="text-sm text-gray-500">
+                                                {/* <span className="text-gray-500 mr-1">{item.product.currency}</span> */}
+                                                {formatter.format(Number(item.product.discountedPrice > 0 ? item.product.discountedPrice : item.product.pricePerUnit))}
+                                                <span className="ml-0">{item.product.billingUnit == "HOURLY" ? '/hour' : '/day'}</span>
+                                            </p>
+                                        </div>
+                                        <div className="flex-1 flex items-end justify-between text-sm">
+                                            <p className="text-gray-500">Qty {item.quantity}</p>
 
                                             <div className="flex">
-                                                <button type="button" className="font-medium text-indigo-600 hover:text-indigo-500" onClick={() => removeItem(product)}>
+                                                <button type="button" className="font-medium text-red-400 hover:text-red-600" onClick={() => removeItem(item)}>
                                                     Remove
                                                 </button>
                                             </div>
@@ -72,7 +91,7 @@ export default function Cart({ cartItems }) {
                                     </div>
                                 </li>
                             ))}
-                            {cart && cart.length == 0 && <div className="text-center">
+                            {cartItems && cartItems.cartItems.length == 0 && <div className="text-center">
                                 <img src="/empty-box.png" alt="empty cart" className="w-full max-w-md mx-auto" />
                                 No items added...
                             </div>}
@@ -84,17 +103,17 @@ export default function Cart({ cartItems }) {
             <div className="col-span-12 flex items-center justify-center w-full h-max lg:col-span-4">
                 <div className="lg:rounded lg:shadow-xl py-5 lg:px-4 lg:py-6">
                     <div className="flex justify-between text-base font-medium text-gray-900">
-                        <p>Subtotal</p>
-                        <p>${getTotal()}</p>
+                        <p>Total</p>
+                        <p>{formatter.format(Number(cartItems.totalPrice))}</p>
                     </div>
                     <p className="mt-2 text-sm text-gray-500">Actual price may vary based on taxes calculated on purchase.</p>
                     <div className="mt-6">
                         {cart && cart.length > 0 ? <Link href="/cart/checkout">
-                            <a className="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                            <a className="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-secondary-one hover:bg-secondary-three"
                             >
                                 Checkout
                             </a>
-                        </Link> : <a className="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-300"
+                        </Link> : <a className="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-gray-600 bg-gray-300"
                         >
                             Checkout
                         </a>}
@@ -107,7 +126,7 @@ export default function Cart({ cartItems }) {
 
 export async function getServerSideProps(ctx) {
     const { req, res } = ctx
-    const data = parseCookies(req)
+    const data = helper.parseCookies(req)
 
     if (res) {
         if (Object.keys(data).length === 0 && data.constructor === Object) {
@@ -118,15 +137,11 @@ export async function getServerSideProps(ctx) {
     const config = {
         headers: { Authorization: `Bearer ${data['token']}` }
     }
-
     let response = await axios.get(`${baseUrl}/carts`, config);
-    console.log(response);
-    // extract the data
     let result = response.data;
-
     return {
         props: {
-            cartItems: result,
+            cartItemsObj: result,
         },
     };
 }

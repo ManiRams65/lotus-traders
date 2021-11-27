@@ -132,6 +132,7 @@ export async function getServerSideProps(ctx) {
   let response = await fetch(`${baseUrl}/products`);
   // extract the data
   let result = await response.json();
+  // console.log(result);
 
   return {
     props: {

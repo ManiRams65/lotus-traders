@@ -13,7 +13,9 @@ npm install
 ## Usage
 
 Use the below comment o run the app locally.
+
 ```bash
 npm run dev
 ```
 
+Also used tailwind css for stylings

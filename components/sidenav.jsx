@@ -6,6 +6,8 @@ import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchCart } from '../redux/cart.slice'
+import { useCookies } from "react-cookie"
+import Loader from './loader'
 
 const menus = [
     { icon: HomeIcon, key: 'home-menu', label: 'Home', href: '/' },
@@ -25,22 +27,26 @@ const adminMenus = [
 
 export const Sidenav = () => {
     const [openMobMenu, setOpenMobMenu] = useState(false)
+    const [cookie, setCookie, removeCookie] = useCookies(['token'])
+    const [loader, setLoader] = useState(true);
 
     const cart = useSelector((state) => state.cart);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const loadCart = async () => {
-            await dispatch(fetchCart());
-        };
-        loadCart();
-        console.log(cart);
+        if (cookie.token) {
+            const loadCart = async () => {
+                setLoader(true);
+                await dispatch(fetchCart());
+                setLoader(false);
+            };
+            loadCart();
+        }
     }, [dispatch]);
 
     const handleSearch = (e, mob) => {
         if (e.key === 'Enter') {
-            console.log(e.target.value);
             if (mob) {
                 setOpenMobMenu(false);
             }
@@ -57,6 +63,7 @@ export const Sidenav = () => {
 
     return (
         <div className="relative w-full bg-primary-two h-max text-tertiary z-20">
+            {loader && <Loader text="Loading..." />}
             <div className="w-full flex flex-col sm:flex-row sm:justify-around">
                 <div className="w-full h-screen hidden lg:block">
                     <Link href="/cart">

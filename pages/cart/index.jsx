@@ -13,20 +13,9 @@ export default function Cart({ cartItemsObj }) {
     const cart = useSelector((state) => state.cart);
     const dispatch = useDispatch();
 
-    console.log(cartItems);
-
-    const getTotal = () => {
-        let tot = 0;
-        cart.map((prod) => {
-            tot = tot + (Number(prod.discountedPrice ? prod.discountedPrice : prod.pricePerUnit) * Number(prod.quantity))
-        });
-        return tot;
-    }
-
     const removeItem = (item) => {
         helper.axiosInstance.delete(`carts/cart-item/${item.id}`)
             .then(({ data }) => {
-                console.log(data)
                 setCartItems({ ...data });
                 dispatch(setCart(data.cartItems));
                 toast.success('Removed from cart')
@@ -126,16 +115,19 @@ export default function Cart({ cartItemsObj }) {
 
 export async function getServerSideProps(ctx) {
     const { req, res } = ctx
-    const data = helper.parseCookies(req)
+    const cookie = helper.parseCookies(req)
 
-    if (res) {
-        if (Object.keys(data).length === 0 && data.constructor === Object) {
-            res.writeHead(301, { Location: "/" })
-            res.end()
+    if (!cookie || !cookie['token']) {
+        return {
+            redirect: {
+                destination: '/login',
+                permanent: false,
+            },
         }
     }
+
     const config = {
-        headers: { Authorization: `Bearer ${data['token']}` }
+        headers: { Authorization: `Bearer ${cookie['token']}` }
     }
     let response = await axios.get(`${baseUrl}/carts`, config);
     let result = response.data;

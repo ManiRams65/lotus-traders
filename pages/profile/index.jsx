@@ -1,21 +1,22 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { ShoppingBagIcon, PencilIcon } from '@heroicons/react/solid'
-import { parseCookies } from "../../config/auth-helper"
+import helper from "../../config/auth-helper"
 import { useState } from 'react';
 import { useRouter } from 'next/router'
 import { useCookies } from "react-cookie"
+import { useSelector, useDispatch } from 'react-redux';
 
-export default function Profile({ data }) {
+export default function Profile() {
     const router = useRouter()
-    const [user, setUser] = useState(data);
     const [cookie, setCookie, removeCookie] = useCookies(['user'])
-
-    console.log(user);
+    const dispatch = useDispatch();
 
     const signOut = (e) => {
+        dispatch(resetCart([]));
         removeCookie('user');
         removeCookie('token');
+        localStorage.removeItem('token');
         removeCookie('cart');
         router.push('/login');
     }
@@ -35,7 +36,7 @@ export default function Profile({ data }) {
                 </div>
                 <section className="relative w-full z-20 py-16 px-4">
                     <div className="bg-white w-full mb-6 shadow-xl rounded-lg mt-20 lg:mt-40">
-                        {user && <div className="px-6">
+                        {cookie.user && <div className="px-6">
                             <div className="flex flex-wrap justify-center">
                                 {/* <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
                                     <div className="relative">
@@ -70,11 +71,11 @@ export default function Profile({ data }) {
                             </div>
                             <div className="text-center mt-12">
                                 <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
-                                    {user.firstName} &nbsp; {user.lastName}
+                                    {cookie.user.firstName} &nbsp; {cookie.user.lastName}
                                 </h3>
                                 <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
                                     <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>
-                                    {user.email}
+                                    {cookie.user.email}
                                 </div>
                                 {/* <div className="mb-2 text-blueGray-600 mt-10">
                                     <i className="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>Address
@@ -86,7 +87,7 @@ export default function Profile({ data }) {
                             <div className="mt-10 py-10 text-center">
                                 <div className="flex flex-col md:flex-row items-center justify-center">
                                     <Link href="/profile/orders">
-                                        <div className="mx-3 mb-5 flex items-center bg-secondary-three px-5 py-3 rounded-lg hover:cursor-pointer hover:shadow-xl">
+                                        <div className="mx-3 flex items-center bg-secondary-three px-5 py-3 rounded-lg hover:cursor-pointer hover:shadow-xl">
                                             <ShoppingBagIcon className="h-6 w-6 mr-4 text-white" />
                                             <span className="text-white">Orders</span>
                                         </div>
@@ -103,7 +104,7 @@ export default function Profile({ data }) {
                                 </div>
                             </div>
                         </div>}
-                        {!user && <div className="px-6">
+                        {!cookie.user && <div className="px-6">
                             <div className="w-full">
                                 <div className="py-32 px-3 flex items-center justify-center">
                                     Not logged in
@@ -124,23 +125,18 @@ export default function Profile({ data }) {
 
 export async function getServerSideProps(ctx) {
     const { req, res } = ctx
-    const data = parseCookies(req)
+    const cookie = helper.parseCookies(req)
 
-    if (res) {
-        if (Object.keys(data).length === 0 && data.constructor === Object) {
-            res.writeHead(301, { Location: "/" })
-            res.end()
+    if (!cookie || !cookie['token']) {
+        return {
+            redirect: {
+                destination: '/login',
+                permanent: false,
+            },
         }
     }
 
-    // request products from api
-    // let response = await fetch(`${baseUrl}/products`);
-    // // extract the data
-    // let result = await response.json();
-
     return {
-        props: {
-            data: data['user'] ? JSON.parse(data['user']) : null
-        },
+        props: {}
     };
 }

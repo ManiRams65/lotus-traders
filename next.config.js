@@ -13,5 +13,6 @@ module.exports = withPWA({
     images: {
         domains: ['images.freeimages.com', 'res.cloudinary.com'],
     },
-    target: "experimental-serverless-trace",
+    target: "serverless",
+    swcMinify: true,
 })

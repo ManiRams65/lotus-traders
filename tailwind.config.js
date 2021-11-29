@@ -29,6 +29,17 @@ module.exports = {
       'secondary-two': '#FEEC58',
       'secondary-three': '#BF902D',
       'tertiary': '#808285'
+    }),
+    borderColor: theme => ({
+      ...theme('colors'),
+      'primary-one': '#E868A3',
+      'primary-two': '#E9C8DD',
+      'primary-three': '#EC6AA6',
+      'primary-four': '#E872A8',
+      'secondary-one': '#D6B62C',
+      'secondary-two': '#FEEC58',
+      'secondary-three': '#BF902D',
+      'tertiary': '#808285'
     })
   },
   variants: {

@@ -3,15 +3,14 @@ import { CalendarIcon } from '@heroicons/react/solid'
 import { Dialog, Transition } from '@headlessui/react'
 import { useSelector, useDispatch } from 'react-redux';
 import { addToCart, removeFromCart } from '../redux/cart.slice';
-import DatePicker from "react-datepicker";
-import TimeKeeper from 'react-timekeeper';
 import "react-datepicker/dist/react-datepicker.css";
 import { useRouter } from 'next/router'
 import { useCookies } from "react-cookie"
-import axios from 'axios';
-import { baseUrl } from "../config/config"
+import helper from "../config/auth-helper"
 import Loader from '../components/loader'
 import { toast } from 'react-toastify';
+
+const time = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
 
 export default function RentalDialogue({ product, openDialogue, removeBut }) {
     const [cookie, setCookie] = useCookies(['user'])
@@ -20,39 +19,28 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
     const cart = useSelector((state) => state.cart);
     const dispatch = useDispatch();
     const [loader, setLoader] = useState(false)
-
+    const [fromDate, setFromDate] = useState('')
+    const [fromTime, setFromTime] = useState('1')
+    const [fromZone, setFromZone] = useState('AM')
+    const [toDate, setToDate] = useState('')
+    const [toTime, setToTime] = useState('9')
+    const [toZone, setToZone] = useState('PM')
+    const [singleDay, setSingleDay] = useState(product.billingUnit == 'HOURLY' ? 2 : 1)
     const [open, setOpen] = useState(openDialogue)
-
-    const [startDate, setStartDate] = useState(new Date());
-    let tom = new Date();
-    tom.setDate(tom.getDate() + 1);
-    const [endDate, setEndDate] = useState(tom);
-    const onChange = (dates) => {
-        const [start, end] = dates;
-        setStartDate(start);
-        setEndDate(end);
-    };
-    const [startTime, setStartTime] = useState('9:00 am')
-    const [showStartTime, setShowStartTime] = useState(false)
-    const [endTime, setEndTime] = useState('9:00 pm')
-    const [showEndTime, setShowEndTime] = useState(false)
 
     const addProductToCart = () => {
         setLoader(true);
-        const fromDate = getFormattedDate(startDate, startTime)
-        const toDate = getFormattedDate(endDate, endTime)
+        const fromFullDate = getFormattedDate(new Date(fromDate ? fromDate : (new Date())), product.billingUnit == 'HOURLY' ? fromTime : '0', product.billingUnit == 'HOURLY' ? fromZone : 'AM')
+        const toFullDate = singleDay != 2 ? fromFullDate : getFormattedDate(new Date(toDate ? toDate : (new Date())), product.billingUnit == 'HOURLY' ? toTime : '0', product.billingUnit == 'HOURLY' ? toZone : 'AM')
         const cart = {
             product: product.id,
             quantity: 1,
             cart: cartCookie.cart.id,
-            fromDate,
-            toDate
+            fromDate: fromFullDate,
+            toDate: toFullDate
         }
-
-        console.log(cart);
-        axios.post(`${baseUrl}/carts/cart-item`, cart).then(async ({ data }) => {
+        helper.axiosInstance.post(`carts/cart-item`, cart).then(async ({ data }) => {
             setLoader(false);
-            console.log(data);
             dispatch(addToCart(data));
             toast.success("Added to cart!!!")
             setOpen(false)
@@ -62,8 +50,7 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
     const removeProductFromCart = () => {
         const cartItem = cart.find(x => x.product == product.id);
         setLoader(true);
-        axios.delete(`${baseUrl}/carts/cart-item/${cartItem}`).then(async ({ data }) => {
-            console.log(data);
+        helper.axiosInstance.delete(`carts/cart-item/${cartItem}`).then(async ({ data }) => {
             dispatch(removeFromCart(cartItem));
             setLoader(false);
             toast.success("Removed from cart!")
@@ -76,24 +63,20 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
         toast.error("Some error occured, Try again!!!")
     }
 
-    const getFormattedDate = (date, time) => {
+    const getFormattedDate = (date, time, zone) => {
         let year = date.getFullYear();
         let month = (1 + date.getMonth()).toString().padStart(2, '0');
         let day = date.getDate().toString().padStart(2, '0');
 
-        const fDate = month + '/' + day + '/' + year;
-
-        const timeAry = time.split(" ");
-        let hr = Number((timeAry[0].split(":"))[0]);
-        if (timeAry[1] == 'pm') {
+        let hr = Number(time);
+        if (zone == 'PM') {
             hr = hr + 12;
         }
-        console.log(timeAry, hr)
-        return fDate + "T" + ((hr.toString()).length == 2 ? hr.toString() : ("0" + hr.toString())) + ":00:00";
+        return month + '/' + day + '/' + year + "T" + ((hr.toString()).length == 2 ? hr.toString() : ("0" + hr.toString())) + ":00:00";
     }
 
     const isInCart = (id) => {
-        return cart.findIndex(x => x.id == id) >= 0 ? true : false;
+        return cart.findIndex(x => x.product.id == id) >= 0 ? true : false;
     }
 
     return (
@@ -146,64 +129,71 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
                                                     <CalendarIcon className="h-5 w-5 text-primary-one mr-2" aria-hidden="true" /> Select date and time
                                                 </Dialog.Title>
                                                 <div className="mt-2">
-                                                    <div className="w-full grid grid-cols-12 gap-6">
-                                                        <div className="col-span-12 text-center lg:col-span-7">
-                                                            {showStartTime &&
-                                                                <div className="col-span-12">
-                                                                    <TimeKeeper
-                                                                        time={startTime}
-                                                                        onChange={(newTime) => setStartTime(newTime.formatted12)}
-                                                                        onDoneClick={() => setShowStartTime(false)}
-                                                                    />
+                                                    <div className="w-full grid grid-cols-12 gap-6 mb-4 lg:mb-6">
+                                                        <div className="col-span-12 pt-4">
+                                                            <div className="flex items-center">
+                                                                <div className="mr-4">
+                                                                    <label className="inline-flex items-center">
+                                                                        <input type="radio" className="form-radio text-primary-one border-primary-one focus:outline-none focus:ring-0"
+                                                                            name="radio" value="1" onChange={() => setSingleDay(1)} checked={singleDay == 1} />
+                                                                        <span className="ml-2">Single day</span>
+                                                                    </label>
                                                                 </div>
-                                                            }
-                                                            {showEndTime &&
-                                                                <TimeKeeper
-                                                                    time={endTime}
-                                                                    onChange={(newTime) => setEndTime(newTime.formatted12)}
-                                                                    onDoneClick={() => setShowEndTime(false)}
-                                                                />
-                                                            }
-                                                            {!showStartTime && !showEndTime &&
-                                                                <>
-                                                                    <label htmlFor="start-date"></label>
-                                                                    <DatePicker
-                                                                        selected={startDate}
-                                                                        onChange={onChange}
-                                                                        startDate={startDate}
-                                                                        endDate={endDate}
-                                                                        selectsRange
-                                                                        inline
-                                                                    />
-                                                                </>
-                                                            }
-                                                        </div>
-                                                        <div className="col-span-12 text-center lg:col-span-5 p-2">
-                                                            <div className="my-2">
-                                                                <h6>From: </h6>
-                                                                <p className="text-md text-gray-900">
-                                                                    <span className="text-sm text-gray-500">Date: </span>
-                                                                    {startDate.toDateString()}
-                                                                </p>
-                                                                <p className="text-md text-gray-900">
-                                                                    <span className="text-sm text-gray-500">Time: </span>
-                                                                    {startTime} {!showStartTime &&
-                                                                        <button className="text-sm text-primary-one hover:text-secondary-one ml-1" onClick={() => setShowStartTime(true)}>change</button>
-                                                                    }</p>
+                                                                <div>
+                                                                    <label className="inline-flex items-center">
+                                                                        <input type="radio" className="form-radio text-primary-one border-primary-one focus:outline-none focus:ring-0"
+                                                                            name="radio" value="2" onChange={() => setSingleDay(2)} checked={singleDay == 2} />
+                                                                        <span className="ml-2">Multiple days</span>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                            {endDate && <div className="my-2">
-                                                                <h6>To: </h6>
-                                                                <p className="text-md text-gray-900">
-                                                                    <span className="text-sm text-gray-500">Date: </span>
-                                                                    {endDate.toDateString()}
-                                                                </p>
-                                                                <p className="text-md text-gray-900">
-                                                                    <span className="text-sm text-gray-500">Time: </span>
-                                                                    {endTime} {!showEndTime &&
-                                                                        <button className="text-sm text-primary-one hover:text-secondary-one ml-1" onClick={() => setShowEndTime(true)}>change</button>
-                                                                    }</p>
+                                                        </div>
+                                                        <div className="col-span-12 lg:col-span-6">
+                                                            <div className="mb-4">
+                                                                <label htmlFor="fromDate" className="text-secondary-three">From Date:</label>
+                                                                <input type="date" name="fromDate" id="fromDate" onChange={(e) => setFromDate(e.target.value)}
+                                                                    className="w-full mt-2 rounded text-gray-400 focus:text-gray-600 outline-none focus:ring-0 focus:outline-none border-gray-400 focus:border-primary-one" />
+                                                            </div>
+                                                            {product.billingUnit == 'HOURLY' && <div>
+                                                                <label htmlFor="fromTime" className="text-secondary-three">From Date:</label>
+                                                                <div name="fromTime" id="fromTime" className="w-full flex items-center mt-2">
+                                                                    <select onChange={(e) => setFromTime(e.target.value)}
+                                                                        className="w-6/12 rounded text-gray-400 focus:text-gray-600 outline-none focus:ring-0 focus:outline-none border-gray-400 focus:border-primary-one">
+                                                                        {time.map((d) => (
+                                                                            <option key={d} value={d}>{d}</option>
+                                                                        ))}
+                                                                    </select>
+                                                                    <select onChange={(e) => setFromZone(e.target.value)}
+                                                                        className="w-5/12 ml-auto rounded text-gray-400 focus:text-gray-600 outline-none focus:ring-0 focus:outline-none border-gray-400 focus:border-primary-one">
+                                                                        <option value="AM">AM</option>
+                                                                        <option value="PM">PM</option>
+                                                                    </select>
+                                                                </div>
                                                             </div>}
                                                         </div>
+                                                        {singleDay == 2 && <div className="col-span-12 lg:col-span-6">
+                                                            <div className="mb-4">
+                                                                <label htmlFor="toDate" className="text-secondary-three">To Date:</label>
+                                                                <input type="date" name="toDate" id="toDate" onChange={(e) => setToDate(e.target.value)}
+                                                                    className="w-full mt-2 rounded text-gray-400 focus:text-gray-600 outline-none focus:ring-0 focus:outline-none border-gray-400 focus:border-primary-one" />
+                                                            </div>
+                                                            {product.billingUnit == 'HOURLY' && <div>
+                                                                <label htmlFor="toTime" className="text-secondary-three">To Date:</label>
+                                                                <div name="toTime" id="toTime" className="w-full flex items-center mt-2">
+                                                                    <select onChange={(e) => setToTime(e.target.value)}
+                                                                        className="w-6/12 rounded text-gray-400 focus:text-gray-600 outline-none focus:ring-0 focus:outline-none border-gray-400 focus:border-primary-one">
+                                                                        {time.map((d) => (
+                                                                            <option key={d} value={d}>{d}</option>
+                                                                        ))}
+                                                                    </select>
+                                                                    <select onChange={(e) => setToZone(e.target.value)}
+                                                                        className="w-5/12 ml-auto rounded text-gray-400 focus:text-gray-600 outline-none focus:ring-0 focus:outline-none border-gray-400 focus:border-primary-one">
+                                                                        <option value="AM">AM</option>
+                                                                        <option value="PM">PM</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>}
+                                                        </div>}
 
                                                     </div>
                                                     <p className="text-xs text-tertiary mt-2"><span className="text-red-500 mr-1">Note: </span>

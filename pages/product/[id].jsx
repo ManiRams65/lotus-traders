@@ -1,10 +1,14 @@
 import React, { Fragment, useState } from 'react'
 import { PlusIcon, MinusIcon, CalendarIcon } from '@heroicons/react/solid'
 import { useSelector, useDispatch } from 'react-redux';
-import { incrementQuantity, decrementQuantity, addToCart } from '../../redux/cart.slice';
+import { incrementQuantity, decrementQuantity, removeFromCart, replaceCartItem } from '../../redux/cart.slice';
 import "react-datepicker/dist/react-datepicker.css";
 import RentalDialogue from '../../components/rental-dialogue'
 import { baseUrl } from '../../config/config'
+import helper from '../../config/auth-helper'
+import Loader from '../../components/loader'
+import { toast } from 'react-toastify';
+import { useCookies } from "react-cookie"
 
 const productMock = {
     id: 1,
@@ -21,15 +25,16 @@ const productMock = {
 
 export default function ProductPage({ prodObj, id }) {
     const cart = useSelector((state) => state.cart);
+    const [loader, setLoader] = useState(false)
+    const [loadText, setLoadText] = useState('Adding to cart')
+    const [cookie, setCookie] = useCookies(['cart'])
     const dispatch = useDispatch();
     // const [activeImg, setActiveImg] = useState(prodObj)
 
     const [product, setProduct] = useState(prodObj)
 
-    console.log(product)
-
     const isInCart = (id) => {
-        return cart.findIndex(x => x.id == id) >= 0 ? true : false;
+        return cart.findIndex(x => x.product.id == id) >= 0 ? true : false;
     }
 
     const getKeys = (data) => {
@@ -46,11 +51,64 @@ export default function ProductPage({ prodObj, id }) {
     }
 
     const getQuantity = (id) => {
-        return cart.find(x => x.id == id).quantity;
+        return cart.find(x => x.product.id == id).quantity;
+    }
+
+    const plusQuantity = (id) => {
+        setLoadText('Increasing cart quantity...')
+        setLoader(true)
+        const temp = cart.find(x => x.product.id == id);
+        const cartItem = {
+            cart: cookie.cart.id,
+            id: temp.id,
+            product: temp.product.id,
+            quantity: temp.quantity + 1,
+            fromDate: temp.fromDate,
+            toDate: temp.toDate
+        };
+        helper.axiosInstance.put(`carts/cart-item/${cartItem.id}`, cartItem)
+            .then(res => onSuccess(res.data.cartItems[0], 'plus')).catch(e => onErr(e))
+    }
+
+    const minusQuantity = (id) => {
+        setLoadText('Decreasing cart quantity...')
+        setLoader(true)
+        const temp = cart.find(x => x.product.id == id);
+        const cartItem = {
+            cart: cookie.cart.id,
+            id: temp.id,
+            product: temp.product.id,
+            quantity: temp.quantity,
+            fromDate: temp.fromDate,
+            toDate: temp.toDate
+        };
+        if (cartItem.quantity > 1) {
+            cartItem.quantity = cartItem.quantity - 1;
+            helper.axiosInstance.put(`carts/cart-item/${cartItem.id}`, cartItem)
+                .then(res => onSuccess(res.data.cartItems[0], 'plus')).catch(e => onErr(e))
+        } else {
+            helper.axiosInstance.delete(`carts/cart-item/${cartItem.id}`)
+                .then(({ data }) => {
+                    dispatch(removeFromCart(cartItem.id))
+                    setLoader(false);
+                }).catch(e => onErr(e));
+        }
+    }
+
+    const onSuccess = (obj, flag) => {
+        dispatch(replaceCartItem(obj))
+        setLoader(false);
+    }
+
+    const onErr = (e) => {
+        console.log(e);
+        toast.error('Something went wrong')
+        setLoader(false)
     }
 
     return (
         <div className="bg-white w-full">
+            {loader && <Loader text={loadText} />}
             {product && <div className="w-full mt-6 grid grid-cols-12 gap-6">
 
                 {product.images.length > 0 && <div className="col-span-12 lg:col-span-5 px-2 pt-5">
@@ -78,12 +136,12 @@ export default function ProductPage({ prodObj, id }) {
                     <p className="text-md text-gray-500">
                         (billing per {product.billingUnit == 'HOURLY' ? 'hour' : 'day'})
                     </p>
-                    {/* {isInCart(product.id) ? <div className="w-max my-8 flex items-center">
-                        <MinusIcon onClick={() => dispatch(decrementQuantity(product))} className="w-6 h-6 p-1 bg-red-100 hover:bg-red-500 mr-4 hover:text-white text-red-500 hover:cursor-pointer" />
+                    {isInCart(product.id) ? <div className="w-max my-8 flex items-center">
+                        <MinusIcon onClick={() => minusQuantity(product.id)} className="w-6 h-6 p-1 bg-red-100 hover:bg-red-500 mr-4 hover:text-white text-red-500 hover:cursor-pointer" />
                         {getQuantity(product.id)}
-                        <PlusIcon onClick={() => dispatch(incrementQuantity(product))} className="w-6 h-6 p-1 bg-green-100 hover:bg-green-500 ml-4 hover:text-white text-green-500 hover:cursor-pointer" />
-                    </div> : <RentalDialogue product={product} openDialogue={false} removeBut={true} />} */}
-                    <RentalDialogue product={product} openDialogue={false} removeBut={true} />
+                        <PlusIcon onClick={() => plusQuantity(product.id)} className="w-6 h-6 p-1 bg-green-100 hover:bg-green-500 ml-4 hover:text-white text-green-500 hover:cursor-pointer" />
+                    </div> : <RentalDialogue product={product} openDialogue={false} removeBut={false} />}
+                    {/* <RentalDialogue product={product} openDialogue={false} removeBut={true} /> */}
 
                     {product.metadata && <>
                         <h2 className="mt-10">Product information:</h2>
@@ -112,8 +170,6 @@ export async function getServerSideProps(ctx) {
     let response = await fetch(`${baseUrl}/products/${id}`);
     // extract the data
     let result = await response.json();
-
-    console.log(result);
 
     return {
         props: {

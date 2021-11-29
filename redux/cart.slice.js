@@ -10,7 +10,7 @@ const cartSlice = createSlice({
             state.push(...action.payload);
         },
         addToCart: (state, action) => {
-            const itemExists = state.find((item) => item.product === action.payload.product);
+            const itemExists = state.find((item) => item.product == action.payload.product);
             if (itemExists) {
                 itemExists.quantity++;
             } else {
@@ -18,21 +18,28 @@ const cartSlice = createSlice({
             }
         },
         incrementQuantity: (state, action) => {
-            const item = state.find((item) => item.product === action.payload.product);
+            const item = state.find((item) => item.product == action.payload.product);
             item.quantity++;
         },
         decrementQuantity: (state, action) => {
-            const item = state.find((item) => item.product === action.payload.product);
-            if (item.quantity === 1) {
-                const index = state.findIndex((item) => item.product === action.payload);
+            const item = state.find((item) => item.product == action.payload.product);
+            if (item.quantity == 1) {
+                const index = state.findIndex((item) => item.product == action.payload);
                 state.splice(index, 1);
             } else {
                 item.quantity--;
             }
         },
         removeFromCart: (state, action) => {
-            const index = state.findIndex((item) => item.product === action.payload);
+            const index = state.findIndex((item) => item.id == action.payload);
             state.splice(index, 1);
+        },
+        resetCart: (state, action) => {
+            state.splice(0, state.length)
+        },
+        replaceCartItem: (state, action) => {
+            const item = state.find((item) => item.id == action.payload.id);
+            item['quantity'] = action.payload.quantity;
         },
     },
 });
@@ -45,6 +52,8 @@ export const {
     incrementQuantity,
     decrementQuantity,
     removeFromCart,
+    resetCart,
+    replaceCartItem
 } = cartSlice.actions;
 
 

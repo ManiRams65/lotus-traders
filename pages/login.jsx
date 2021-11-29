@@ -69,7 +69,6 @@ export default function Login() {
         setLoader(true);
         const email = document.getElementById('forgot-email').value;
         axios.post(`${baseUrl}/auth/reset-password`, { email }).then(res => {
-            console.log(res);
             setLoader(false);
         }).catch(err => console.log(err));
     }

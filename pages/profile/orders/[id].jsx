@@ -73,7 +73,6 @@ export default function OderPage({ order }) {
 
 export async function getServerSideProps(ctx) {
     const { id } = ctx.params;
-    console.log(id);
     // // request posts from api
     // let response = await fetch(`${baseUrl}/api/products?limit=4`);
     // // extract the data

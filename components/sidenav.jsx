@@ -28,7 +28,7 @@ const adminMenus = [
 export const Sidenav = () => {
     const [openMobMenu, setOpenMobMenu] = useState(false)
     const [cookie, setCookie, removeCookie] = useCookies(['token'])
-    const [loader, setLoader] = useState(true);
+    const [loader, setLoader] = useState(false);
 
     const cart = useSelector((state) => state.cart);
 
@@ -43,6 +43,7 @@ export const Sidenav = () => {
             };
             loadCart();
         }
+        return;
     }, [dispatch]);
 
     const handleSearch = (e, mob) => {
@@ -63,7 +64,7 @@ export const Sidenav = () => {
 
     return (
         <div className="relative w-full bg-primary-two h-max text-tertiary z-20">
-            {loader && <Loader text="Loading..." />}
+            {loader && <Loader text="Loading from side nav..." />}
             <div className="w-full flex flex-col sm:flex-row sm:justify-around">
                 <div className="w-full h-screen hidden lg:block">
                     <Link href="/cart">

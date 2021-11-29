@@ -33,7 +33,6 @@ export default function ManageProduct({ isNew }) {
     }
 
     const addProduct = (data, event) => {
-        console.log(data, files.length);
         if (files.length > 0) {
             setLoading(true);
             let tempProd = Object.assign({}, data);

@@ -21,8 +21,6 @@ export default function Inventory({ result }) {
       const temp = products;
       const indx = temp.findIndex(x => x.id == product.id);
       temp.splice(indx, 1);
-      console.log(indx)
-      console.log(temp)
       setProducts([...temp]);
     }).catch(e => setLoading(false));
   }

@@ -68,7 +68,7 @@ export default function Login() {
         setLoadingText("Sending new password through mail... Please wait...");
         setLoader(true);
         const email = document.getElementById('forgot-email').value;
-        axios.post(`${baseUrl}/auth/reset-password`, { email }).then(res => {
+        helper.axiosInstance.post(`/auth/reset-password`, { email }).then(res => {
             setLoader(false);
         }).catch(err => console.log(err));
     }

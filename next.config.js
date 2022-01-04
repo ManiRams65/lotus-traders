@@ -14,4 +14,8 @@ module.exports = withPWA({
         domains: ['images.freeimages.com', 'res.cloudinary.com'],
     },
     swcMinify: true,
+    publicRuntimeConfig: {
+        // Will be available on both server and client
+        backendUrl: process.env.BASE_URL,
+    }
 })

@@ -1,6 +1,6 @@
 import { ArrowLeftIcon, PlusIcon } from '@heroicons/react/solid'
 import Link from 'next/link'
-import axios from 'axios'
+import helper from '../../config/auth-helper'
 import { baseUrl } from '../../config/config'
 import { useState } from 'react'
 import Loader from '../../components/loader';
@@ -15,11 +15,11 @@ export default function ManageProduct({ isNew }) {
     const [loading, setLoading] = useState(false);
     const { register, formState: { errors }, reset, handleSubmit } = useForm();
 
-    const handleOnChange = (key, value) => {
-        const temp = product;
-        temp[key] = key == 'pricePerUnit' || key == 'discountedPrice' ? Number(value) : value;
-        setProduct(product)
-    }
+    // const handleOnChange = (key, value) => {
+    //     const temp = product;
+    //     temp[key] = key == 'pricePerUnit' || key == 'discountedPrice' ? Number(value) : value;
+    //     setProduct(product)
+    // }
 
     const handleMetaData = (key, value) => {
         const temp = metaData;
@@ -37,15 +37,17 @@ export default function ManageProduct({ isNew }) {
             setLoading(true);
             let tempProd = Object.assign({}, data);
             tempProd['metadata'] = metaData
-            axios.post(`${baseUrl}/products`, tempProd)
+            helper.axiosInstance.post(`${baseUrl}/products`, tempProd)
                 .then(res => {
                     const formData = new FormData();
                     for (let i = 0; i < files.length; i++) {
                         formData.append("files", files[i]);
                     }
-                    axios.post(`${baseUrl}/images/product/${res.data.id}`, formData)
+                    helper.axiosInstance.post(`${baseUrl}/images/product/${res.data.id}`, formData)
                         .then(res => {
                             setLoading(false)
+                            event.target.reset();
+                            setFiles([])
                             toast.success("Product added successfully!");
                         })
                         .catch(e => onErr(e));

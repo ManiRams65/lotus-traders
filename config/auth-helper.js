@@ -1,6 +1,8 @@
 import cookie from "cookie"
 import axios from 'axios'
-import { baseUrl } from './config'
+import getConfig from "next/config";
+const { publicRuntimeConfig } = getConfig();
+export const baseUrl = publicRuntimeConfig.backendUrl;
 
 export function parseCookies(req) {
     return cookie.parse(req ? req.headers.cookie || "" : document.cookie)

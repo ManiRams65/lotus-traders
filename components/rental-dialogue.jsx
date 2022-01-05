@@ -19,17 +19,47 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
     const cart = useSelector((state) => state.cart);
     const dispatch = useDispatch();
     const [loader, setLoader] = useState(false)
+    const [loaderTxt, setLoaderTxt] = useState('')
     const [fromDate, setFromDate] = useState('')
     const [fromTime, setFromTime] = useState('1')
     const [fromZone, setFromZone] = useState('AM')
     const [toDate, setToDate] = useState('')
-    const [toTime, setToTime] = useState('9')
-    const [toZone, setToZone] = useState('PM')
+    const [toTime, setToTime] = useState('1')
+    const [toZone, setToZone] = useState('AM')
     const [singleDay, setSingleDay] = useState(product.billingUnit == 'HOURLY' ? 2 : 1)
     const [open, setOpen] = useState(openDialogue)
 
-    const addProductToCart = () => {
-        setLoader(true);
+    const addProductToCart = async () => {
+        if (!fromDate) {
+            toast.error('Choose a date and time to proceed');
+            return;
+        }
+        if (singleDay == 2 && !toDate) {
+            // console.log(singleDay, toDate)
+            toast.error('Choose a date and time to proceed');
+            return;
+        }
+        const newTime = (new Date()).toTimeString().substring(0, 2);
+
+        if ((fromZone == 'AM' ? Number(fromTime) : Number(fromTime) + 12) <= Number(newTime)) {
+            // console.log((fromZone == 'AM' ? fromTime : fromTime + 12), newTime)
+            toast.error('Orders closed for the choosen time');
+            return;
+        }
+        if (fromDate == toDate && (toZone == 'AM' ? Number(toTime) : Number(toTime) + 12) <= Number(newTime)) {
+            // console.log(fromDate, toDate, (toZone == 'AM' ? toTime : toTime + 12), newTime)
+            toast.error('Choose different to time/date');
+            return;
+        }
+        if (singleDay == 2 && (toDate.split('-')[2] == fromDate.split('-')[2])) {
+            // console.log(singleDay, fromDate, toDate)
+            if ((toZone == 'AM' ? Number(toTime) : Number(toTime) + 12) <= (fromTime == 'AM' ? Number(fromTime) : Number(fromTime) + 12)) {
+                // console.log(toZone, toTime, fromTime)
+                toast.error('Time gap should be greater than 1 hour...');
+                return;
+            }
+        }
+
         const fromFullDate = getFormattedDate(new Date(fromDate ? fromDate : (new Date())), product.billingUnit == 'HOURLY' ? fromTime : '0', product.billingUnit == 'HOURLY' ? fromZone : 'AM')
         const toFullDate = singleDay != 2 ? fromFullDate : getFormattedDate(new Date(toDate ? toDate : (new Date())), product.billingUnit == 'HOURLY' ? toTime : '0', product.billingUnit == 'HOURLY' ? toZone : 'AM')
         const cart = {
@@ -39,15 +69,18 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
             fromDate: fromFullDate,
             toDate: toFullDate
         }
-        helper.axiosInstance.post(`carts/cart-item`, cart).then(async ({ data }) => {
-            setLoader(false);
-            dispatch(addToCart(data));
-            toast.success("Added to cart!!!")
-            setOpen(false)
-        }).catch(e => onErr(e))
+        // setLoaderTxt('Adding to cart');
+        // setLoader(true);
+        // helper.axiosInstance.post(`carts/cart-item`, cart).then(async ({ data }) => {
+        //     setLoader(false);
+        //     dispatch(addToCart(data));
+        //     toast.success("Added to cart!!!")
+        //     setOpen(false)
+        // }).catch(e => onErr(e))
     }
 
     const removeProductFromCart = () => {
+        setLoaderTxt('Removing from cart');
         const cartItem = cart.find(x => x.product == product.id);
         setLoader(true);
         helper.axiosInstance.delete(`carts/cart-item/${cartItem}`).then(async ({ data }) => {
@@ -60,7 +93,6 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
     const onErr = (err) => {
         console.log(err);
         setLoader(false)
-        toast.error("Some error occured, Try again!!!")
     }
 
     const getFormattedDate = (date, time, zone) => {
@@ -81,7 +113,7 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
 
     return (
         <>
-            {loader && <Loader text="Adding to cart" />}
+            {loader && <Loader text={loaderTxt} />}
             {isInCart(product.id) && removeBut ? <button onClick={removeProductFromCart}
                 className="my-8 w-max bg-red-100 rounded-md py-1 px-8 flex items-center text-base font-medium text-red-500 hover:bg-red-500 hover:text-white hover:shadow-xl hover:border-0 focus:outline-none focus:ring-0"
             >
@@ -151,11 +183,11 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
                                                         <div className="col-span-12 lg:col-span-6">
                                                             <div className="mb-4">
                                                                 <label htmlFor="fromDate" className="text-secondary-three">From Date:</label>
-                                                                <input type="date" name="fromDate" id="fromDate" onChange={(e) => setFromDate(e.target.value)}
+                                                                <input type="date" name="fromDate" id="fromDate" min={new Date().toISOString().split('T')[0]} onChange={(e) => setFromDate(e.target.value)}
                                                                     className="w-full mt-2 rounded text-gray-400 focus:text-gray-600 outline-none focus:ring-0 focus:outline-none border-gray-400 focus:border-primary-one" />
                                                             </div>
                                                             {product.billingUnit == 'HOURLY' && <div>
-                                                                <label htmlFor="fromTime" className="text-secondary-three">From Date:</label>
+                                                                <label htmlFor="fromTime" className="text-secondary-three">Time from:</label>
                                                                 <div name="fromTime" id="fromTime" className="w-full flex items-center mt-2">
                                                                     <select onChange={(e) => setFromTime(e.target.value)}
                                                                         className="w-6/12 rounded text-gray-400 focus:text-gray-600 outline-none focus:ring-0 focus:outline-none border-gray-400 focus:border-primary-one">
@@ -174,11 +206,11 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
                                                         {singleDay == 2 && <div className="col-span-12 lg:col-span-6">
                                                             <div className="mb-4">
                                                                 <label htmlFor="toDate" className="text-secondary-three">To Date:</label>
-                                                                <input type="date" name="toDate" id="toDate" onChange={(e) => setToDate(e.target.value)}
+                                                                <input type="date" name="toDate" id="toDate" min={new Date().toISOString().split('T')[0]} onChange={(e) => setToDate(e.target.value)}
                                                                     className="w-full mt-2 rounded text-gray-400 focus:text-gray-600 outline-none focus:ring-0 focus:outline-none border-gray-400 focus:border-primary-one" />
                                                             </div>
                                                             {product.billingUnit == 'HOURLY' && <div>
-                                                                <label htmlFor="toTime" className="text-secondary-three">To Date:</label>
+                                                                <label htmlFor="toTime" className="text-secondary-three">Ttime to:</label>
                                                                 <div name="toTime" id="toTime" className="w-full flex items-center mt-2">
                                                                     <select onChange={(e) => setToTime(e.target.value)}
                                                                         className="w-6/12 rounded text-gray-400 focus:text-gray-600 outline-none focus:ring-0 focus:outline-none border-gray-400 focus:border-primary-one">
@@ -218,7 +250,7 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
                                 {!cookie.user && <div className="w-full">
                                     <div className="py-32 px-3 flex items-center justify-center">
                                         Not logged in,
-                                        <button onClick={() => router.push('/login')}
+                                        <button onClick={() => router.push('/login?returnUrl=' + router.pathname)}
                                             className="mx-2 text-indigo-500 outline-none focus:outline-none hover:text-red-500" type="button">
                                             login / sign-up
                                         </button> to continue

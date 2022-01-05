@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router'
 import { useCookies } from "react-cookie"
 import { useSelector, useDispatch } from 'react-redux';
+import { resetCart } from '../../redux/cart.slice'
 
 export default function Profile() {
     const router = useRouter()
@@ -18,7 +19,7 @@ export default function Profile() {
         removeCookie('token');
         localStorage.removeItem('token');
         removeCookie('cart');
-        router.push('/login');
+        router.push('/');
     }
 
     return (
@@ -92,10 +93,7 @@ export default function Profile() {
                                             <span className="text-white">Orders</span>
                                         </div>
                                     </Link>
-                                    <Link href={{
-                                        pathname: '/profile/manage-profile',
-                                        query: { id: 1 },
-                                    }}>
+                                    <Link href='/profile/manage-profile'>
                                         <div className="mx-3 flex items-center bg-secondary-three px-5 py-3 rounded-lg hover:cursor-pointer hover:shadow-xl">
                                             <PencilIcon className="h-6 w-6 mr-4 text-white" />
                                             <span className="text-white">Manage Profile</span>

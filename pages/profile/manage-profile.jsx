@@ -1,10 +1,43 @@
 import { ArrowLeftIcon } from '@heroicons/react/solid'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { useCookies } from "react-cookie"
+import helper from "../../config/auth-helper"
+import Loader from '../../components/loader'
+import { toast } from 'react-toastify';
 
-export default function ManageProfile({ id }) {
+export default function ManageProfile() {
+    const [user, setUser] = useState(null)
+    const [cookie, setCookie, removeCookie] = useCookies(['user'])
+    const [loader, setLoader] = useState(false)
+    const [loaderTxt, setLoaderTxt] = useState('')
+
+    useEffect(() => {
+        setLoaderTxt('Fetching your details...');
+        setLoader(true);
+        helper.axiosInstance.get('consumers/' + cookie.user.id)
+            .then(res => { setUser(res.data); setLoader(false); })
+            .catch(err => { console.log(err); setLoader(false); })
+    }, [])
+
+    const handleOnChange = (e) => {
+        const { id, value } = e.target;
+        const temp = user;
+        temp[id] = value;
+        setUser({ ...temp });
+    }
+
+    const update = () => {
+        setLoaderTxt('Updating your details...');
+        setLoader(true);
+        helper.axiosInstance.update('consumers/' + cookie.user.id, user)
+            .then(res => { setUser(res.data); setLoader(false); })
+            .catch(err => { console.log(err); setLoader(false); })
+    }
+
     return (
         <div className="flex flex-col py-8 px-2 lg:px-4">
-
+            {loader && <Loader text={loaderTxt} />}
             <div className="px-2 mb-5 flex items-center">
                 <Link href="/profile">
                     <ArrowLeftIcon className="h-6 w-6 mr-2 text-primary hover:text-secondary" />
@@ -22,7 +55,7 @@ export default function ManageProfile({ id }) {
                                     <h4 className="text-lg">Personal details</h4>
                                 </div>
 
-                                <div className="col-span-12 mb-4">
+                                {/* <div className="col-span-12 mb-4">
                                     <label className="block text-sm font-medium text-gray-700">Photo</label>
                                     <div className="mt-1 flex items-center">
                                         <span className="inline-block h-12 w-12 rounded-full overflow-hidden bg-gray-100">
@@ -36,45 +69,46 @@ export default function ManageProfile({ id }) {
                                             Change
                                         </button>
                                     </div>
-                                </div>
+                                </div> */}
                                 <div className="col-span-12 my-3">
-                                    <label htmlFor="product-name" className="block text-sm font-medium text-gray-700">
+                                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
                                         First Name
                                     </label>
-                                    <input type="text" name="product-name" id="product-name"
+                                    <input type="text" name="firstName" id="firstName" value={user?.firstName} onChange={handleOnChange}
                                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                     />
                                 </div>
 
                                 <div className="col-span-12 md:col-span-6 my-3">
-                                    <label htmlFor="product-description" className="block text-sm font-medium text-gray-700">
+                                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
                                         Last Name
                                     </label>
-                                    <input type="text" name="product-description" id="product-description"
+                                    <input type="text" name="lastName" id="lastName" value={user?.lastName} onChange={handleOnChange}
                                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                     />
                                 </div>
 
                                 <div className="col-span-12 md:col-span-6 my-3">
-                                    <label htmlFor="product-description" className="block text-sm font-medium text-gray-700">
+                                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                                         Email
                                     </label>
-                                    <input type="email" name="product-description" id="product-description" disabled
-                                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                    <input type="email" name="email" id="email" disabled value={user?.email} onChange={handleOnChange}
+                                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md hover:cursor-not-allowed"
                                     />
+                                    <small className='text-yellow-600 ml-2'>Email can't be edited.</small>
                                 </div>
 
                                 <div className="col-span-12 md:col-span-6 my-3">
-                                    <label htmlFor="product-description" className="block text-sm font-medium text-gray-700">
+                                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
                                         Phone/Mobile
                                     </label>
-                                    <input type="number" name="product-description" id="product-description"
+                                    <input type="number" name="phone" id="phone" value={user?.phone} onChange={handleOnChange}
                                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                     />
                                 </div>
                             </div>
 
-                            <div className="col-span-12 col-span-6">
+                            {false && <div className="col-span-12 col-span-6">
                                 <div className="my-3">
                                     <h4 className="text-lg">Address</h4>
                                 </div>
@@ -126,12 +160,15 @@ export default function ManageProfile({ id }) {
                                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                     />
                                 </div>
-                            </div>
+                            </div>}
 
                         </div>
                     </div>
+                    <div className="py-3 px-4">
+                        <p className='text-sm text-gray-400'>Note: Details mentioned above are used only for identifying the users on order confirmation and internal purposes only. Will not be shared publicly.</p>
+                    </div>
                     <div className="px-4 py-3 text-right sm:px-6">
-                        <button type="submit"
+                        <button type="submit" onClick={update}
                             className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white hover:text-black bg-primary-three hover:bg-secondary focus:outline-none focus:ring-none"
                         >
                             Save
@@ -147,14 +184,4 @@ export default function ManageProfile({ id }) {
             </div>
         </div>
     )
-}
-
-export async function getServerSideProps(ctx) {
-    const { id } = ctx.query;
-
-    return {
-        props: {
-            id: id
-        },
-    };
 }

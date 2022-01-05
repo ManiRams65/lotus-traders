@@ -6,8 +6,8 @@ export default function Checkout() {
         <div className="flex flex-col py-8 px-2 lg:px-4">
 
             <div className="px-2 mb-5 flex items-center">
-                <Link href="/profile">
-                    <ArrowLeftIcon className="h-6 w-6 mr-2 text-primary hover:text-secondary" />
+                <Link href="/cart">
+                    <ArrowLeftIcon className="h-6 w-6 mr-2 text-primary hover:text-secondary cursor-pointer" />
                 </Link>
                 <h1 className="text-md font-bold text-primary">Checkout</h1>
             </div>

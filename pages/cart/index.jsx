@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { removeFromCart } from '../../redux/cart.slice'
+import { removeFromCart, setCart } from '../../redux/cart.slice'
 import axios from 'axios'
 import helper from "../../config/auth-helper"
 import { baseUrl, formatter } from '../../config/config'
@@ -22,7 +22,6 @@ export default function Cart({ cartItemsObj }) {
             })
             .catch(err => {
                 console.log(err);
-                toast.error('Something wnet wrong.')
             })
     }
 

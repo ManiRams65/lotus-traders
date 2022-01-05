@@ -1,5 +1,6 @@
 import { Product } from '../components/product';
 import { productsMock } from '../mock/data';
+import { baseUrl, formatter } from '../config/config'
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -28,6 +29,10 @@ export default function SearchResult({ products, searchText }) {
 
 export async function getServerSideProps(ctx) {
     const { text } = ctx.query;
+
+    let response = await fetch(`${baseUrl}/products`);
+    // extract the data
+    let result = await response.json();
     // // request posts from api
     // let response = await fetch(`${baseUrl}/api/products?limit=4`);
     // // extract the data
@@ -35,7 +40,7 @@ export async function getServerSideProps(ctx) {
 
     return {
         props: {
-            products: productsMock ? productsMock : [],
+            products: result ? result : [],
             searchText: text ? text : ''
         },
     };

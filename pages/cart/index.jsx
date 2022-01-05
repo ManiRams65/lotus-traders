@@ -46,10 +46,7 @@ export default function Cart({ cartItemsObj }) {
                                         <div>
                                             <div className="flex justify-between text-base font-medium text-gray-900">
                                                 <h3>
-                                                    <Link href={{
-                                                        pathname: '/product-page',
-                                                        query: { id: item.product.id ? item.product.id : null },
-                                                    }}>
+                                                    <Link href={'/product/' + item.product.id}>
                                                         <a className="capitalize hover:text-secondary-three">{item.product.title}</a>
                                                     </Link>
                                                 </h3>

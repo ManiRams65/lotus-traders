@@ -83,13 +83,16 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
 
     const removeProductFromCart = () => {
         setLoaderTxt('Removing from cart');
-        const cartItem = cart.find(x => x.product == product.id);
-        setLoader(true);
-        helper.axiosInstance.delete(`carts/cart-item/${cartItem}`).then(async ({ data }) => {
-            dispatch(removeFromCart(cartItem));
-            setLoader(false);
-            toast.success("Removed from cart!")
-        }).catch(e => onErr(e))
+        const cartItem = cart.find(x => x.product.id == product.id);
+
+        if (cartItem) {
+            setLoader(true);
+            helper.axiosInstance.delete(`carts/cart-item/${cartItem.id}`).then(async ({ data }) => {
+                dispatch(removeFromCart(cartItem));
+                setLoader(false);
+                toast.success("Removed from cart!")
+            }).catch(e => onErr(e))
+        }
     }
 
     const onErr = (err) => {

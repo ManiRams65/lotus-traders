@@ -17,5 +17,6 @@ module.exports = withPWA({
     publicRuntimeConfig: {
         // Will be available on both server and client
         backendUrl: process.env.BASE_URL,
-    }
+    },
+    generateEtags: false,
 })

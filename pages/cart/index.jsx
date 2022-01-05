@@ -1,17 +1,25 @@
 /* This example requires Tailwind CSS v2.0+ */
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { removeFromCart, setCart } from '../../redux/cart.slice'
-import axios from 'axios'
+import { setCart } from '../../redux/cart.slice'
 import helper from "../../config/auth-helper"
-import { baseUrl, formatter } from '../../config/config'
+import { formatter } from '../../config/config'
 import { toast } from 'react-toastify'
 
-export default function Cart({ cartItemsObj }) {
-    const [cartItems, setCartItems] = useState(cartItemsObj)
+export default function Cart() {
+    const [cartItems, setCartItems] = useState(null)
+    const [cartLoading, setCartLoading] = useState(false)
     const cart = useSelector((state) => state.cart);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        setCartLoading(true);
+        helper.axiosInstance.get(`/carts`).then(res => {
+            setCartItems(res.data);
+            setCartLoading(false);
+        }).catch(err => { setCartLoading(false); console.log(err) })
+    }, [])
 
     const removeItem = (item) => {
         helper.axiosInstance.delete(`carts/cart-item/${item.id}`)
@@ -34,8 +42,8 @@ export default function Cart({ cartItemsObj }) {
 
                 <div className="mt-8">
                     <div className="flow-root">
-                        <ul role="list" className="-my-6 divide-y divide-gray-200">
-                            {cartItems && cartItems.cartItems.map((item) => (
+                        {!cartLoading && cartItems && <ul role="list" className="-my-6 divide-y divide-gray-200">
+                            {cartItems.cartItems.map((item) => (
                                 <li key={item.id} className="py-6 flex">
                                     <div className="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
                                         {item.product.images.length > 0 && <img src={item.product.images[0].url} alt={item.product.title}
@@ -80,7 +88,54 @@ export default function Cart({ cartItemsObj }) {
                                 <img src="/empty-box.png" alt="empty cart" className="w-full max-w-md mx-auto" />
                                 No items added...
                             </div>}
-                        </ul>
+                        </ul>}
+                        {cartLoading && <div>
+                            <div class="border-b border-gray-300 p-4 max-w-lg w-full mx-auto">
+                                <div class="animate-pulse flex space-x-4">
+                                    <div class="rounded-full bg-gray-700 h-10 w-10"></div>
+                                    <div class="flex-1 space-y-6 py-1">
+                                        <div class="h-2 bg-gray-700 rounded"></div>
+                                        <div class="space-y-3">
+                                            <div class="grid grid-cols-3 gap-4">
+                                                <div class="h-2 bg-gray-700 rounded col-span-2"></div>
+                                                <div class="h-2 bg-gray-700 rounded col-span-1"></div>
+                                            </div>
+                                            <div class="h-2 bg-gray-700 rounded"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-10 border-b border-gray-300 p-4 max-w-lg w-full mx-auto">
+                                <div class="animate-pulse flex space-x-4">
+                                    <div class="rounded-full bg-gray-700 h-10 w-10"></div>
+                                    <div class="flex-1 space-y-6 py-1">
+                                        <div class="h-2 bg-gray-700 rounded"></div>
+                                        <div class="space-y-3">
+                                            <div class="grid grid-cols-3 gap-4">
+                                                <div class="h-2 bg-gray-700 rounded col-span-2"></div>
+                                                <div class="h-2 bg-gray-700 rounded col-span-1"></div>
+                                            </div>
+                                            <div class="h-2 bg-gray-700 rounded"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-10 border-b border-gray-300 p-4 max-w-lg w-full mx-auto">
+                                <div class="animate-pulse flex space-x-4">
+                                    <div class="rounded-full bg-gray-700 h-10 w-10"></div>
+                                    <div class="flex-1 space-y-6 py-1">
+                                        <div class="h-2 bg-gray-700 rounded"></div>
+                                        <div class="space-y-3">
+                                            <div class="grid grid-cols-3 gap-4">
+                                                <div class="h-2 bg-gray-700 rounded col-span-2"></div>
+                                                <div class="h-2 bg-gray-700 rounded col-span-1"></div>
+                                            </div>
+                                            <div class="h-2 bg-gray-700 rounded"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>}
                     </div>
                 </div>
             </div>
@@ -89,7 +144,7 @@ export default function Cart({ cartItemsObj }) {
                 <div className="lg:rounded lg:shadow-xl py-5 lg:px-4 lg:py-6">
                     <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Total</p>
-                        <p>{formatter.format(Number(cartItems.totalPrice))}</p>
+                        {cartItems && cartItems?.totalPrice && <p>{formatter.format(Number(cartItems.totalPrice))}</p>}
                     </div>
                     <p className="mt-2 text-sm text-gray-500">Actual price may vary based on taxes calculated on purchase.</p>
                     <div className="mt-6">
@@ -109,27 +164,27 @@ export default function Cart({ cartItemsObj }) {
     )
 }
 
-export async function getServerSideProps(ctx) {
-    const { req, res } = ctx
-    const cookie = helper.parseCookies(req)
+// export async function getServerSideProps(ctx) {
+//     const { req, res } = ctx
+//     const cookie = helper.parseCookies(req)
 
-    if (!cookie || !cookie['token']) {
-        return {
-            redirect: {
-                destination: '/login',
-                permanent: false,
-            },
-        }
-    }
+//     if (!cookie || !cookie['token']) {
+//         return {
+//             redirect: {
+//                 destination: '/login',
+//                 permanent: false,
+//             },
+//         }
+//     }
 
-    const config = {
-        headers: { Authorization: `Bearer ${cookie['token']}` }
-    }
-    let response = await axios.get(`${baseUrl}/carts`, config);
-    let result = response.data;
-    return {
-        props: {
-            cartItemsObj: result,
-        },
-    };
-}
+//     const config = {
+//         headers: { Authorization: `Bearer ${cookie['token']}` }
+//     }
+//     let response = await axios.get(`${baseUrl}/carts`, config);
+//     let result = response.data;
+//     return {
+//         props: {
+//             cartItemsObj: result,
+//         },
+//     };
+// }

@@ -64,13 +64,14 @@ export const Sidenav = () => {
 
     return (
         <div className="relative w-full bg-primary-two h-max text-tertiary z-20">
-            {loader && <Loader text="Loading from side nav..." />}
+            {/* {loader && <Loader text="Loading from side nav..." />} */}
             <div className="w-full flex flex-col sm:flex-row sm:justify-around">
                 <div className="w-full h-screen hidden lg:block">
                     <Link href="/cart">
                         <a>
                             <ShoppingCartIcon className="h-6 w-6 z-30 absolute top-10 right-10 cursor-pointer" />
-                            <span className="absolute top-7 right-6 z-20 px-2 py-1 w-6 h-6 text-xs rounded-full text-white bg-primary-one">{cart.length}</span>
+                            {!loader && <span className="absolute top-7 right-6 z-20 px-2 py-1 w-6 h-6 text-xs rounded-full text-white bg-primary-one">{cart.length}</span>}
+                            {loader && <p className='animate-spin absolute top-7 right-9 text-primary-one font-bold z-40 w-min'>|</p>}
                         </a>
                     </Link>
 

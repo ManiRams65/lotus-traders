@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import { PlusIcon, MinusIcon, CalendarIcon } from '@heroicons/react/solid'
 import { useSelector, useDispatch } from 'react-redux';
-import { incrementQuantity, decrementQuantity, removeFromCart, replaceCartItem } from '../../redux/cart.slice';
+import { incrementQuantity, decrementQuantity, removeFromCart, replaceCartItem, setCart } from '../../redux/cart.slice';
 import "react-datepicker/dist/react-datepicker.css";
 import RentalDialogue from '../../components/rental-dialogue'
 import { baseUrl } from '../../config/config'
@@ -9,19 +9,6 @@ import helper from '../../config/auth-helper'
 import Loader from '../../components/loader'
 import { toast } from 'react-toastify';
 import { useCookies } from "react-cookie"
-
-const productMock = {
-    id: 1,
-    title: 'Basic Tee 6-Pack',
-    pricePerUnit: '192',
-    discountedPrice: '150',
-    billingUnit: 'HOURLY',
-    currency: '$',
-    image: 'https://tailwindui.com/img/ecommerce-images/product-page-02-secondary-product-shot.jpg',
-    description:
-        'The Basic Tee 6-Pack allows you to fully express your vibrant personality with three grayscale options. Feeling adventurous? Put on a heather gray tee. Want to be a trendsetter? Try our exclusive colorway: "Black". Need to add an extra pop of color to your outfit? Our white tee has you covered.',
-    metadata: '{ "length": "20 inches", "breadth": "10 inches" }',
-}
 
 export default function ProductPage({ prodObj, id }) {
     const cart = useSelector((state) => state.cart);
@@ -67,7 +54,7 @@ export default function ProductPage({ prodObj, id }) {
             toDate: temp.toDate
         };
         helper.axiosInstance.put(`carts/cart-item/${cartItem.id}`, cartItem)
-            .then(res => onSuccess(res.data.cartItems[0], 'plus')).catch(e => onErr(e))
+            .then(res => onSuccess(res.data.cartItems, 'plus')).catch(e => onErr(e))
     }
 
     const minusQuantity = (id) => {
@@ -85,7 +72,7 @@ export default function ProductPage({ prodObj, id }) {
         if (cartItem.quantity > 1) {
             cartItem.quantity = cartItem.quantity - 1;
             helper.axiosInstance.put(`carts/cart-item/${cartItem.id}`, cartItem)
-                .then(res => onSuccess(res.data.cartItems[0], 'plus')).catch(e => onErr(e))
+                .then(res => onSuccess(res.data.cartItems, 'plus')).catch(e => onErr(e))
         } else {
             helper.axiosInstance.delete(`carts/cart-item/${cartItem.id}`)
                 .then(({ data }) => {
@@ -95,8 +82,8 @@ export default function ProductPage({ prodObj, id }) {
         }
     }
 
-    const onSuccess = (obj, flag) => {
-        dispatch(replaceCartItem(obj))
+    const onSuccess = (cartItems, flag) => {
+        dispatch(setCart(cartItems))
         setLoader(false);
     }
 

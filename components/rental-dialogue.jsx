@@ -41,7 +41,7 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
         }
         const newTime = (new Date()).toTimeString().substring(0, 2);
 
-        if ((fromZone == 'AM' ? Number(fromTime) : Number(fromTime) + 12) <= Number(newTime)) {
+        if ((fromZone == 'AM' ? Number(fromTime) : Number(fromTime) + 12) <= Number(newTime) && new Date().getDate() == Number(fromDate.split('-')[2])) {
             // console.log((fromZone == 'AM' ? fromTime : fromTime + 12), newTime)
             toast.error('Orders closed for the choosen time');
             return;
@@ -61,7 +61,9 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
         }
 
         const fromFullDate = getFormattedDate(new Date(fromDate ? fromDate : (new Date())), product.billingUnit == 'HOURLY' ? fromTime : '0', product.billingUnit == 'HOURLY' ? fromZone : 'AM')
-        const toFullDate = singleDay != 2 ? fromFullDate : getFormattedDate(new Date(toDate ? toDate : (new Date())), product.billingUnit == 'HOURLY' ? toTime : '0', product.billingUnit == 'HOURLY' ? toZone : 'AM')
+        const toFullDate = singleDay != 2 ?
+            getFormattedDate(new Date(fromDate ? fromDate : (new Date())), '12', 'PM')
+            : getFormattedDate(new Date(toDate ? toDate : (new Date())), product.billingUnit == 'HOURLY' ? toTime : '0', product.billingUnit == 'HOURLY' ? toZone : 'AM')
         const cart = {
             product: product.id,
             quantity: 1,
@@ -69,14 +71,14 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
             fromDate: fromFullDate,
             toDate: toFullDate
         }
-        // setLoaderTxt('Adding to cart');
-        // setLoader(true);
-        // helper.axiosInstance.post(`carts/cart-item`, cart).then(async ({ data }) => {
-        //     setLoader(false);
-        //     dispatch(addToCart(data));
-        //     toast.success("Added to cart!!!")
-        //     setOpen(false)
-        // }).catch(e => onErr(e))
+        setLoaderTxt('Adding to cart');
+        setLoader(true);
+        helper.axiosInstance.post(`carts/cart-item`, cart).then(async ({ data }) => {
+            setLoader(false);
+            dispatch(addToCart(data));
+            toast.success("Added to cart!!!")
+            setOpen(false)
+        }).catch(e => onErr(e))
     }
 
     const removeProductFromCart = () => {

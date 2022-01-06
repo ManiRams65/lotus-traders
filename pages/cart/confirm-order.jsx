@@ -37,8 +37,7 @@ export default function ConfirmOrder() {
         const origin = addressObj.addressLine1 + ', ' + addressObj.city + ', ' + addressObj.state + ' ' + addressObj.zipcode;
         const destination = '2 Maxwell Rd, Monroe Township, NJ 08831';
         const { data, status, statusText } = await axios.get(app_url + 'api/v1/map?origin=' + origin + '&destination=' + destination);
-        toast.info(status);
-        if (status == 200 && statusText == 'OK') {
+        if (status == 200) {
             const distance = Number((data.data.rows[0].elements[0].distance.text).split(' ')[0]);
             console.log(distance)
             toast.info(distance);
@@ -47,7 +46,7 @@ export default function ConfirmOrder() {
             setDistance(distance);
             setCharge(charge);
         } else {
-            console.log(data, status)
+            console.log(data, status, statusText)
         }
     }
 

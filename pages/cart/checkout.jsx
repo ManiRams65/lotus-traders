@@ -21,6 +21,8 @@ export default function Checkout() {
             country: country.value,
             zipcode: zipcode.value
         });
+        const origin = ad.value + ', ' + city.value + ', ' + state.value + ' ' + zipcode.value;
+        const destination = '2 Maxwell Rd, Monroe Township, NJ 08831';
         router.push({
             pathname: '/cart/confirm-order',
             query: { address }

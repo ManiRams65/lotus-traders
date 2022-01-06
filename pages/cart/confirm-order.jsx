@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { formatter } from '../../config/config'
 import { app_url, freeMiles, chargePerMile } from "../../config/config"
 import CryptoJS from 'crypto-js'
+import { toast } from 'react-toastify'
 
 export default function ConfirmOrder() {
     const router = useRouter();
@@ -36,12 +37,17 @@ export default function ConfirmOrder() {
         const origin = addressObj.addressLine1 + ', ' + addressObj.city + ', ' + addressObj.state + ' ' + addressObj.zipcode;
         const destination = '2 Maxwell Rd, Monroe Township, NJ 08831';
         const { data, status, statusText } = await axios.get(app_url + 'api/v1/map?origin=' + origin + '&destination=' + destination);
+        toast.info(status);
         if (status == 200 && statusText == 'OK') {
             const distance = Number((data.data.rows[0].elements[0].distance.text).split(' ')[0]);
             console.log(distance)
+            toast.info(distance);
             const charge = distance <= freeMiles ? 0 : (distance - freeMiles) * chargePerMile;
+            toast.info(charge);
             setDistance(distance);
             setCharge(charge);
+        } else {
+            console.log(data, status)
         }
     }
 
@@ -216,3 +222,20 @@ export default function ConfirmOrder() {
         </div>
     )
 }
+
+
+// const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destination}&key=AIzaSyDWc6-894y_DJCewhixQE2FGVJNsft2_I8&units=imperial`;
+
+// export async function getServerSideProps(ctx) {
+//     const { req, res } = ctx
+//     const { origin, destination } = req.query;
+
+//     let response = await axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destination}&key=AIzaSyDWc6-894y_DJCewhixQE2FGVJNsft2_I8&units=imperial`);
+//     let result = response.data;
+//     console.log(result);
+//     return {
+//         props: {
+//             result: result || null,
+//         },
+//     };
+// }

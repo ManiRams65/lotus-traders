@@ -19,13 +19,12 @@ export default function Profile() {
         removeCookie('token');
         localStorage.removeItem('token');
         removeCookie('cart');
-        router.push('/');
     }
 
     return (
         <div className="w-full">
             <Head>
-                <title>Lotus Traders</title>
+                <title>My Account</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
@@ -106,7 +105,7 @@ export default function Profile() {
                             <div className="w-full">
                                 <div className="py-32 px-3 flex items-center justify-center">
                                     Not logged in
-                                    <button onClick={() => router.push('/login')}
+                                    <button onClick={() => router.push('/login?returnUrl=' + router.pathname)}
                                         className="ml-2 text-indigo-500 outline-none focus:outline-none hover:text-red-500" type="button">
                                         login / sign-up
                                     </button>
@@ -128,7 +127,7 @@ export async function getServerSideProps(ctx) {
     if (!cookie || !cookie['token']) {
         return {
             redirect: {
-                destination: '/login',
+                destination: '/login?returnUrl=/profile',
                 permanent: false,
             },
         }

@@ -32,7 +32,7 @@ export default function About() {
     return (
         <div classNameName="flex flex-col items-center justify-center min-h-screen py-2">
             <Head>
-                <title>Lotus Traders</title>
+                <title>About Us</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 

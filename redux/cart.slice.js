@@ -59,7 +59,7 @@ export const {
 
 export const fetchCart = () => {
     return async dispatch => {
-        const { data } = await helper.axiosInstance('carts');
+        const { data } = await helper.axiosInstance.get('carts');
         dispatch(setCart(data.cartItems));
     };
 };

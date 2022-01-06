@@ -3,6 +3,8 @@ import React, { useState } from 'react'
 import helper from '../config/auth-helper'
 // import axios from 'axios';
 import { useCookies } from 'react-cookie'
+import { useSelector, useDispatch } from 'react-redux'
+import { fetchCart } from '../redux/cart.slice'
 import Router, { useRouter } from 'next/router'
 import Loader from '../components/loader'
 import { useForm } from "react-hook-form";
@@ -11,7 +13,7 @@ import { toast } from 'react-toastify';
 export default function Login() {
     const [type, setType] = useState('login');
     const [cookie, setCookie] = useCookies(['user'])
-    // const [tCookie, setTCookie] = useCookies(['token'])
+    const dispatch = useDispatch();
     const [loader, setLoader] = useState(false)
     const router = useRouter()
     const [loadingText, setLoadingText] = useState("Loading")
@@ -28,14 +30,14 @@ export default function Login() {
             await onSuccess(data);
 
             helper.axiosInstance.post(`carts`, data)
-                .then(resp => setCookie('cart', JSON.stringify(resp.data), { path: "/", maxAge: 172800000, sameSite: true }))
+                .then(resp => { setCookie('cart', JSON.stringify(resp.data), { path: "/", maxAge: 172800000, sameSite: true }) })
                 .catch(err => console.log(err));
         }).catch(err => {
             setLoader(false);
         });
     }
 
-    const onLogin = (e) => {
+    const onLogin = async (e) => {
         e.preventDefault();
         setLoadingText("Authenticating... Please wait...");
         setLoader(true);
@@ -46,8 +48,9 @@ export default function Login() {
             await onSuccess(data);
 
             helper.axiosInstance.get(`carts`)
-                .then(resp => {
+                .then(async (resp) => {
                     setCookie('cart', JSON.stringify(resp.data), { path: "/", maxAge: 172800000, sameSite: true });
+                    await dispatch(fetchCart());
                     router.push(router.query.returnUrl || "/");
                 }).catch(err => { setLoader(false); console.log(err) });
         }).catch(err => {
@@ -82,7 +85,7 @@ export default function Login() {
     return (
         <div className="w-full flex flex-col items-center justify-center h-full">
             <Head>
-                <title>Lotus Traders</title>
+                <title>Login/SignUp</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 

@@ -19,4 +19,9 @@ module.exports = withPWA({
         backendUrl: process.env.BASE_URL,
     },
     generateEtags: false,
+    env: {
+        FREE_MILES: 5,
+        CHARGE_PER_MILES: 2
+
+    }
 })

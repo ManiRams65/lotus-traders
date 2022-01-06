@@ -4,7 +4,7 @@ export default function Contact() {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
             <Head>
-                <title>Lotus Traders</title>
+                <title>Contact Us</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 

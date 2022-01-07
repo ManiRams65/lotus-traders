@@ -4,6 +4,8 @@ import getConfig from "next/config";
 const { publicRuntimeConfig } = getConfig();
 export const baseUrl = publicRuntimeConfig.backendUrl;
 import { toast } from 'react-toastify';
+import Router from 'next/router';
+import { useCookies } from "react-cookie"
 
 export function parseCookies(req) {
     return cookie.parse(req ? req.headers.cookie || "" : document.cookie)
@@ -24,8 +26,27 @@ axiosInstance.interceptors.request.use((req) => {
 axiosInstance.interceptors.response.use(
     response => response,
     (error) => {
-        toast.error(error.response.data.payload);
+        if (error.response.data.code == 401) {
+            // if (error.responce.data.payload == 'Invalid username/password') {
+            //     toast.error(error.response.data.payload);
+            // } else {
+            //     signOut();
+            // }
+            if (error.response.data.payload == "Invalid username/password") {
+                toast.error(error.response.data.payload);
+            } else {
+                signOut();
+            }
+        } else {
+            toast.error(error.response.data.payload);
+        }
+        Promise.reject(error.response);
     });
 
 
 export default { axiosInstance, parseCookies };
+
+export const signOut = () => {
+    Router.push('/logout');
+    // localStorage.removeItem('token');
+}

@@ -59,7 +59,11 @@ export const {
 
 export const fetchCart = () => {
     return async dispatch => {
-        const { data } = await helper.axiosInstance.get('carts');
-        dispatch(setCart(data.cartItems));
+        try {
+            const { data } = await helper.axiosInstance.get('carts');
+            dispatch(setCart(data.cartItems));
+        } catch (error) {
+            dispatch(setCart([]));
+        }
     };
 };

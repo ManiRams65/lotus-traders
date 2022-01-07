@@ -15,7 +15,7 @@ export default function ManageProfile() {
     useEffect(() => {
         setLoaderTxt('Fetching your details...');
         setLoader(true);
-        helper.axiosInstance.get('consumers/' + cookie.user.id)
+        helper.axiosInstance.get('consumers/principal')
             .then(res => { setUser(res.data); setLoader(false); })
             .catch(err => { console.log(err); setLoader(false); })
     }, [])

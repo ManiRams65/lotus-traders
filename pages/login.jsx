@@ -19,7 +19,8 @@ export default function Login() {
     const [loadingText, setLoadingText] = useState("Loading")
     const { register, formState: { errors }, handleSubmit } = useForm();
 
-    if (cookie && cookie.user) {
+    if (cookie && cookie.user && Object.keys(cookie.user).length > 0) {
+        // console.log(Object.keys(cookie.user).length && cookie.user)
         router.push(router.query.returnUrl || "/")
     }
 
@@ -45,6 +46,7 @@ export default function Login() {
         const password = document.getElementById('login-password').value;
         const obj = { username: email, password }
         helper.axiosInstance.post(`auth/login`, obj).then(async ({ data }) => {
+            console.log(data);
             await onSuccess(data);
 
             helper.axiosInstance.get(`carts`)
@@ -54,6 +56,7 @@ export default function Login() {
                     router.push(router.query.returnUrl || "/");
                 }).catch(err => { setLoader(false); console.log(err) });
         }).catch(err => {
+            console.log(err.data);
             setLoader(false);
         });
     }

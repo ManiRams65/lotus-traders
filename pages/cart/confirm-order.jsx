@@ -8,6 +8,9 @@ import { formatter } from '../../config/config'
 import { app_url, freeMiles, chargePerMile } from "../../config/config"
 import CryptoJS from 'crypto-js'
 import { toast } from 'react-toastify'
+import Loader from '../../components/loader';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchCart } from '../../redux/cart.slice';
 
 export default function ConfirmOrder() {
     const router = useRouter();
@@ -16,6 +19,9 @@ export default function ConfirmOrder() {
     const [charge, setCharge] = useState(0)
     const [cartLoading, setCartLoading] = useState(false)
     const [cartItems, setCartItems] = useState(null)
+    const [loader, setloader] = useState(false)
+    const [loaderText, setloaderText] = useState('')
+    const dispatch = useDispatch();
 
     useEffect(async () => {
         const ad = router.query.address;
@@ -39,14 +45,9 @@ export default function ConfirmOrder() {
         const { data, status, statusText } = await axios.get(app_url + 'api/v1/map?origin=' + origin + '&destination=' + destination);
         if (status == 200) {
             const distance = Number((data.data.rows[0].elements[0].distance.text).split(' ')[0]);
-            console.log(distance)
-            toast.info(distance);
             const charge = distance <= freeMiles ? 0 : (distance - freeMiles) * chargePerMile;
-            toast.info(charge);
             setDistance(distance);
             setCharge(charge);
-        } else {
-            console.log(data, status, statusText)
         }
     }
 
@@ -56,10 +57,36 @@ export default function ConfirmOrder() {
         const bytes = CryptoJS.AES.decrypt(encoded, cartItems.id);
         const decoded = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
         console.log(decoded);
+        const body = {
+            cartItems: cartItems.cartItems,
+            address: {
+                addressLine1: address.addressLine1,
+                postal: address.zipcode,
+                state: address.state,
+                city: address.city
+            },
+            paymentMethod: "card",
+            distance,
+            deliveryCharge: charge
+        }
+        console.log(body);
+        try {
+            setloader(true);
+            dispatch(fetchCart())
+            setloaderText('Placing order...');
+            const { data } = await helper.axiosInstance.post('/orders', body);
+            router.push('/profile/orders')
+        } catch (error) {
+            setloader(false);
+            console.log(error);
+        }
+
     }
 
     return (
         <div className="flex flex-col py-8 px-2 lg:px-4">
+
+            {loader && <Loader text={loaderText} />}
 
             <div className="px-2 mb-5 flex items-center">
                 <Link href="/cart/checkout">

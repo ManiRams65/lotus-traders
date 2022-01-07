@@ -1,12 +1,13 @@
 import Link from 'next/link'
 import Router from 'next/router'
-import { HomeIcon, ShoppingBagIcon, ShoppingCartIcon, InformationCircleIcon, PhoneIcon, UserIcon, LoginIcon, ViewGridIcon, TableIcon, MenuAlt3Icon } from '@heroicons/react/solid'
+import { HomeIcon, ShoppingBagIcon, ShoppingCartIcon, InformationCircleIcon, PhoneIcon, UserIcon, LoginIcon, LogoutIcon, ViewGridIcon, TableIcon, MenuAlt3Icon } from '@heroicons/react/solid'
 import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchCart } from '../redux/cart.slice'
 import { useCookies } from "react-cookie"
+import { signOut } from '../config/auth-helper';
 import Loader from './loader'
 
 const menus = [
@@ -15,7 +16,8 @@ const menus = [
     { icon: InformationCircleIcon, key: 'about-menu', label: 'About Us', href: '/about' },
     { icon: PhoneIcon, key: 'contact-menu', label: 'Contact us', href: '/contact' },
     { icon: UserIcon, key: 'account-menu', label: 'My Account', href: '/profile' },
-    // { icon: LoginIcon, key: 'login-menu', label: 'Login', href: '/login' }
+    // { icon: LoginIcon, key: 'login-menu', label: 'Login', href: '/login' },
+    // { icon: LogoutIcon, key: 'logout-menu', label: 'Logout', href: '/login' }
 ];
 
 const adminMenus = [
@@ -101,7 +103,30 @@ export const Sidenav = () => {
                                     </span>
                                 </a>
                             </Link>
-                        ))}</nav>
+                        ))}
+                        {(!cookie.token || cookie.token == 'undefined') &&
+                            <Link key="login-key" href="/login">
+                                <a className="flex items-center p-2 my-3 transition-colors duration-300 text-tertiary rounded-lg hover:transform hover:bg-primary-one hover:text-white">
+                                    <LoginIcon className="h-5 w-5" />
+                                    <span className="mx-4 text-lg font-normal">
+                                        Login
+                                    </span>
+                                    <span className="flex-grow text-right">
+                                    </span>
+                                </a>
+                            </Link>
+                        }
+                        {cookie.token && cookie.token != 'undefined' &&
+                            <Link key="logout-key" href="/logout">
+                                <a className="flex items-center p-2 my-3 transition-colors duration-300 text-tertiary rounded-lg hover:transform hover:bg-primary-one hover:text-white">
+                                    <LogoutIcon className="h-5 w-5" />
+                                    <span className="mx-4 text-lg font-normal">
+                                        Logout
+                                    </span>
+                                </a>
+                            </Link>
+                        }
+                    </nav>
 
                     <div className="absolute bottom-0 my-10 flex flex-row justify-center items-center w-full">
                         <Link href="#">
@@ -143,7 +168,9 @@ export const Sidenav = () => {
                         <div className="flex items-center justify-end ml-auto mr-6">
                             <Link href="/cart">
                                 <a className="relative">
-                                    <span className="absolute -top-2 -right-2 z-10 px-1 w-max h-max text-xs rounded-full text-white bg-secondary">{cart.length}</span>
+                                    {!loader && <span className="absolute -top-2 -right-2 z-10 px-1 w-max h-max text-xs rounded-full text-white bg-secondary">{cart.length}</span>}
+                                    {loader && <p className='animate-spin absolute -top-2 -right-2 text-primary-one font-bold z-40 w-min'>|</p>}
+                                    {/* <span className="absolute -top-2 -right-2 z-10 px-1 w-max h-max text-xs rounded-full text-white bg-secondary">{cart.length}</span> */}
                                     <ShoppingCartIcon className="h-6 w-6 z-20 cursor-pointer text-white" />
                                 </a>
                             </Link>
@@ -221,7 +248,30 @@ export const Sidenav = () => {
                                                                     </span>
                                                                 </a>
                                                             </Link>
-                                                        ))}</nav>
+                                                        ))}
+                                                        {(!cookie.token || cookie.token == 'undefined') &&
+                                                            <Link key="login-key" href="/login">
+                                                                <a onClick={() => setOpenMobMenu(false)} className="flex items-center p-2 my-3 transition-colors duration-200 text-white rounded-lg hover:bg-gray-900">
+                                                                    <LoginIcon className="h-5 w-5" />
+                                                                    <span className="mx-4 text-lg font-normal">
+                                                                        Login
+                                                                    </span>
+                                                                    <span className="flex-grow text-right">
+                                                                    </span>
+                                                                </a>
+                                                            </Link>
+                                                        }
+                                                        {cookie.token && cookie.token != 'undefined' &&
+                                                            <Link key="logout-key" href="/logout">
+                                                                <a onClick={() => setOpenMobMenu(false)} className="flex items-center p-2 my-3 transition-colors duration-200 text-white rounded-lg hover:bg-gray-900">
+                                                                    <LogoutIcon className="h-5 w-5" />
+                                                                    <span className="mx-4 text-lg font-normal">
+                                                                        Logout
+                                                                    </span>
+                                                                </a>
+                                                            </Link>
+                                                        }
+                                                    </nav>
 
                                                     <div className="absolute text-white left-0 bottom-10 flex flex-row justify-center items-center w-full">
                                                         <Link href="#">

@@ -2,9 +2,8 @@ import { ArrowLeftIcon } from '@heroicons/react/solid'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useCookies } from "react-cookie"
-import helper from "../../config/auth-helper"
 import Loader from '../../components/loader'
-import { toast } from 'react-toastify';
+import helper from "../../config/auth-helper"
 
 export default function ManageProfile() {
     const [user, setUser] = useState(null)
@@ -101,7 +100,7 @@ export default function ManageProfile() {
                                 </div>
                                 <div className="col-span-12">
                                     <label htmlFor="product-description" className="block text-sm font-medium text-gray-700">
-                                        Address line 1
+                                        House No, Street
                                     </label>
                                     <input type="text" name="product-description" id="product-description"
                                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"

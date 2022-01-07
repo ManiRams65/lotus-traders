@@ -67,7 +67,7 @@ export default function Orders() {
                                     Ordered on: &nbsp; <span className="text-gray-900">{order.created}</span>
                                 </p>
                                 <p className="pt-1 pb-2">
-                                    total amount: &nbsp; <span className="text-gray-900">{formatter.format(Number(order.totalPrice))}</span>
+                                    Total amount: &nbsp; <span className="text-gray-900">{formatter.format(Number(order.totalPrice))}</span>
                                 </p>
                             </div>
                             <div className="col-span-12 my-4 text-center">

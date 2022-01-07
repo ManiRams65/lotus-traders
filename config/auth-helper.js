@@ -5,7 +5,6 @@ const { publicRuntimeConfig } = getConfig();
 export const baseUrl = publicRuntimeConfig.backendUrl;
 import { toast } from 'react-toastify';
 import Router from 'next/router';
-import { useCookies } from "react-cookie"
 
 export function parseCookies(req) {
     return cookie.parse(req ? req.headers.cookie || "" : document.cookie)
@@ -32,7 +31,7 @@ axiosInstance.interceptors.response.use(
             // } else {
             //     signOut();
             // }
-            if (error.response.data.payload == "Invalid username/password") {
+            if (error.response.data.payload == "Username/password are invalid") {
                 toast.error(error.response.data.payload);
             } else {
                 signOut();

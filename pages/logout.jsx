@@ -28,7 +28,7 @@ export default function Logout() {
             </Head>
 
             <main className="flex flex-col items-center justify-center w-full flex-1 px-2 lg:px-10">
-                <p className='mb-10'>Signed out redirecting to homepage in </p>
+                <p className='mb-10'>Signed out. Redirecting to homepage </p>
                 <CountdownCircleTimer
                     isPlaying
                     duration={3}

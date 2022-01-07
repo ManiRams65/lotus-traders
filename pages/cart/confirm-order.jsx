@@ -92,7 +92,7 @@ export default function ConfirmOrder() {
                 <Link href="/cart/checkout">
                     <ArrowLeftIcon className="h-6 w-6 mr-2 text-primary hover:text-secondary cursor-pointer" />
                 </Link>
-                <h1 className="text-md font-bold text-primary">Back to Checkout</h1>
+                <h1 className="text-md font-bold text-primary">Return to the Checkout page€</h1>
             </div>
 
             <div className="grid grid-cols-12 gap-5">

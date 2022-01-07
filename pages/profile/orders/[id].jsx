@@ -49,7 +49,7 @@ export default function OderPage() {
                         </span>
                     </p>*/}
                     <p className="py-1">
-                        ordered on: &nbsp; <span className="text-gray-900">{getDate(order.created)}</span>
+                        Ordered on: &nbsp; <span className="text-gray-900">{getDate(order.created)}</span>
                     </p>
                     <p className="pt-1 pb-2">
                         Total price for products: &nbsp; <span className="text-gray-900">{formatter.format(Number(order.totalPrice))}</span>

@@ -43,19 +43,19 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
 
         if ((fromZone == 'AM' ? Number(fromTime) : Number(fromTime) + 12) <= Number(newTime) && new Date().getDate() == Number(fromDate.split('-')[2])) {
             // console.log((fromZone == 'AM' ? fromTime : fromTime + 12), newTime)
-            toast.error('Orders closed for the choosen time');
+            toast.error('Orders have been closed for the selected time');
             return;
         }
         if (fromDate == toDate && (toZone == 'AM' ? Number(toTime) : Number(toTime) + 12) <= Number(newTime)) {
             // console.log(fromDate, toDate, (toZone == 'AM' ? toTime : toTime + 12), newTime)
-            toast.error('Choose different to time/date');
+            toast.error('Choose different to Date/Time');
             return;
         }
         if (singleDay == 2 && (toDate.split('-')[2] == fromDate.split('-')[2])) {
             // console.log(singleDay, fromDate, toDate)
             if ((toZone == 'AM' ? Number(toTime) : Number(toTime) + 12) <= (fromTime == 'AM' ? Number(fromTime) : Number(fromTime) + 12)) {
                 // console.log(toZone, toTime, fromTime)
-                toast.error('Time gap should be greater than 1 hour...');
+                toast.error('A time gap of at least one hour is recommended...');
                 return;
             }
         }
@@ -90,7 +90,7 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
             helper.axiosInstance.delete(`carts/cart-item/${cartItem.id}`).then(async ({ data }) => {
                 dispatch(removeFromCart(cartItem));
                 setLoader(false);
-                toast.success("Removed from cart!")
+                toast.success("Removed from cart!!!")
             }).catch(e => onErr(e))
         }
     }
@@ -234,7 +234,7 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
 
                                                     </div>
                                                     <p className="text-xs text-tertiary mt-2"><span className="text-red-500 mr-1">Note: </span>
-                                                        Please note that selected date and time should not be less than an hour.Billing will be charged based on the date and time which you select now.
+                                                    We request that you select a date and time that is no less than an hour. Billing will be based on the date and time that you select now.
                                                     </p>
                                                 </div>
                                             </div>
@@ -243,7 +243,7 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
                                     <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                                         <button type="button" onClick={() => addProductToCart()}
                                             className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-one text-base font-medium text-white hover:bg-secondary-one hover:shadow-xl focus:shadow-lg focus:outline-none focus:ring-0 sm:ml-3 sm:w-auto sm:text-sm">
-                                            Add to cart
+                                            Add to Bag
                                         </button>
                                         <button type="button" onClick={() => setOpen(false)}
                                             className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 bg-gray-50 shadow-sm px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-500 hover:text-white focus:outline-none focus:ring-0 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
@@ -254,10 +254,10 @@ export default function RentalDialogue({ product, openDialogue, removeBut }) {
 
                                 {!cookie.user && <div className="w-full">
                                     <div className="py-32 px-3 flex items-center justify-center">
-                                        Not logged in,
+                                    You are not logged in,
                                         <button onClick={() => router.push('/login?returnUrl=' + router.pathname)}
                                             className="mx-2 text-indigo-500 outline-none focus:outline-none hover:text-red-500" type="button">
-                                            login / sign-up
+                                            Sign up / login
                                         </button> to continue
                                     </div>
                                 </div>}

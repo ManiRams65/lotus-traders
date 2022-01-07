@@ -48,7 +48,7 @@ export default function ManageProduct({ isNew }) {
                             setLoading(false)
                             event.target.reset();
                             setFiles([])
-                            toast.success("Product added successfully!");
+                            toast.success("The product has been successfully added!");
                         })
                         .catch(e => onErr(e));
                 })
@@ -61,7 +61,7 @@ export default function ManageProduct({ isNew }) {
     const onErr = (err) => {
         console.log(err);
         setLoading(false)
-        toast.error("Some error occured, Try again!!!")
+        toast.error("A problem has occurred, please try again!!!")
     }
 
     return (
@@ -152,9 +152,9 @@ export default function ManageProduct({ isNew }) {
                                     htmlFor="file-upload"
                                     className="relative py-2 px-4 cursor-pointer bg-indigo-100 rounded font-medium text-indigo-500 hover:bg-indigo-400 hover:text-white focus-within:outline-none focus-within:ring-none"
                                 >
-                                    <span>Upload images</span>
+                                    <span>Upload Images</span>
                                     <input id="file-upload" name="file-upload" type="file" accept="image/*" multiple onChange={(e) => handleFileChange(e)} className="sr-only" />
-                                </label><sup className="text-red-500">*</sup> <span className="mx-5 text-gray-600">{files.length} file selected</span> <span className="py-1 px-3 bg-red-50 text-red-500 rounded hover:shadow-xl hover:bg-red-500 hover:text-white hover:cursor-pointer" onClick={() => setFiles([])}>Clear</span>
+                                </label><sup className="text-red-500">*</sup> <span className="mx-5 text-gray-600">{files.length} File selected</span> <span className="py-1 px-3 bg-red-50 text-red-500 rounded hover:shadow-xl hover:bg-red-500 hover:text-white hover:cursor-pointer" onClick={() => setFiles([])}>Clear</span>
                             </div>
 
                             <div className="mt-5 col-span-12">

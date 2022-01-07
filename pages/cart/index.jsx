@@ -146,7 +146,7 @@ export default function Cart() {
                         <p>Total</p>
                         {cartItems && cartItems?.totalPrice && <p>{formatter.format(Number(cartItems.totalPrice))}</p>}
                     </div>
-                    <p className="mt-2 text-sm text-gray-500">Actual price may vary based on taxes calculated on purchase.</p>
+                    <p className="mt-2 text-sm text-gray-500">Taxes calculated at the point of purchase may affect the final price.</p>
                     <div className="mt-6">
                         {cart && cart.length > 0 ? <Link href="/cart/checkout">
                             <a className="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-secondary-one hover:bg-secondary-three"

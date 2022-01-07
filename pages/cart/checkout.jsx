@@ -36,7 +36,7 @@ export default function Checkout() {
                 <Link href="/cart">
                     <ArrowLeftIcon className="h-6 w-6 mr-2 text-primary hover:text-secondary cursor-pointer" />
                 </Link>
-                <h1 className="text-md font-bold text-primary">Back to Cart</h1>
+                <h1 className="text-md font-bold text-primary">Return to Cart</h1>
             </div>
 
             <div className="mt-5 md:mt-0 md:col-span-2">
@@ -50,7 +50,7 @@ export default function Checkout() {
                                 </div>
                                 <div className="col-span-12">
                                     <label htmlFor="product-description" className="block text-sm font-medium text-gray-700">
-                                        Address line 1
+                                        House No, Street
                                     </label>
                                     <input type="text" name="product-description" id="product-description" required
                                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -97,7 +97,7 @@ export default function Checkout() {
                                     />
                                 </div>
                                 <div className="col-span-12 my-3 text-primary-one"><small>
-                                    Please provide a exact address and pincode where order needs to be delivered.
+                                Deliveries must be made to an exact address and pin code.
                                 </small></div>
                             </div>
 

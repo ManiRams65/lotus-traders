@@ -25,7 +25,7 @@ export default function Login() {
     }
 
     const onSignIn = (obj) => {
-        setLoadingText("Creating account... Please wait...");
+        setLoadingText("Account creation is in progress, please wait....");
         setLoader(true);
         helper.axiosInstance.post('auth/register', obj).then(async ({ data }) => {
             await onSuccess(data);
@@ -40,7 +40,7 @@ export default function Login() {
 
     const onLogin = async (e) => {
         e.preventDefault();
-        setLoadingText("Authenticating... Please wait...");
+        setLoadingText("We are authenticating... Please wait...");
         setLoader(true);
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
@@ -77,7 +77,7 @@ export default function Login() {
 
     const onForgotPassword = (e) => {
         e.preventDefault();
-        setLoadingText("Sending new password through mail... Please wait...");
+        setLoadingText("Mailing new password... Please wait..");
         setLoader(true);
         const email = document.getElementById('forgot-email').value;
         helper.axiosInstance.post(`/auth/reset-password`, { email }).then(res => {
@@ -88,7 +88,7 @@ export default function Login() {
     return (
         <div className="w-full flex flex-col items-center justify-center h-full">
             <Head>
-                <title>Login/SignUp</title>
+                <title>Sign in/Sign up</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
@@ -96,7 +96,7 @@ export default function Login() {
                 {loader && <Loader text={loadingText} />}
                 <div className="w-full px-4 pt-5 pb-1 mx-auto mt-8 mb-6 bg-white rounded-none shadow-xl sm:rounded-lg sm:w-10/12 md:w-8/12 lg:w-6/12 xl:w-5/12 sm:px-6">
                     {type && type == 'login' ? <div>
-                        <h1 className="mb-4 text-lg font-semibold text-left text-primary">Log in to your account</h1>
+                        <h1 className="mb-4 text-lg font-semibold text-left text-primary">Please log in to your account</h1>
                         <form className="mb-8 space-y-6">
                             <label className="block">
                                 <span className="block mb-2 text-sm font-medium text-gray-700">Your Email</span>
@@ -149,7 +149,7 @@ export default function Login() {
 
                     {type && type == 'forgot' ? <div>
                         <h1 className="mb-2 text-lg font-semibold text-left text-primary">Forgot Password?</h1>
-                        <h4 className="mb-4 text-sm text-left text-gray-700">Enter the email address to receive an authentication mail.</h4>
+                        <h4 className="mb-4 text-sm text-left text-gray-700">Receive an authentication email by entering your email address.</h4>
                         <form className="mb-8 space-y-6">
                             <label className="block">
                                 <span className="block mb-2 text-sm font-medium text-gray-700">Your Email</span>

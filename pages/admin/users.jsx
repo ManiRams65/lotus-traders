@@ -28,7 +28,7 @@ export default function Inventory({ result }) {
     <div className="flex flex-col">
       {loader && <Loader text="Please wait..." />}
       <div className="my-5 md:my-10 overflow-x-auto mx-6 lg:mx-8">
-        <h1 className="text-md font-bold">Users Management</h1>
+        <h1 className="text-md font-bold">User Management</h1>
         <div className="lg:mt-10 py-2 align-middle inline-block min-w-full sm:px-4">
           <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
             <table className="min-w-full divide-y divide-gray-200">

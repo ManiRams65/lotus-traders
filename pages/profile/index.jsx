@@ -2,23 +2,29 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { ShoppingBagIcon, PencilIcon } from '@heroicons/react/solid'
 import helper from "../../config/auth-helper"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router'
 import { useCookies } from "react-cookie"
 import { useSelector, useDispatch } from 'react-redux';
 import { resetCart } from '../../redux/cart.slice'
+import Loader from '../../components/loader';
 
 export default function Profile() {
     const router = useRouter()
     const [cookie, setCookie, removeCookie] = useCookies(['user'])
     const dispatch = useDispatch();
+    const [user, setUser] = useState(null)
+    const [loader, setLoader] = useState(false)
+
+    useEffect(() => {
+        setLoader(true);
+        helper.axiosInstance.get('consumers/principal')
+            .then(res => { setUser(res.data); setLoader(false); })
+            .catch(err => { console.log(err); setLoader(false); })
+    }, [])
 
     const signOut = (e) => {
-        dispatch(resetCart([]));
-        removeCookie('user');
-        removeCookie('token');
-        localStorage.removeItem('token');
-        removeCookie('cart');
+        router.push('/logout');
     }
 
     return (
@@ -29,6 +35,7 @@ export default function Profile() {
             </Head>
 
             <main className="w-full flex items-center justify-center bg-gray-200">
+                {loader && <Loader text="Fetching your details" />}
                 <div className="absolute top-0 w-full lg:w-4/5 h-60 z-10 bg-center bg-cover" style={{
                     backgroundImage: "url('https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=2710&amp;q=80')"
                 }}>
@@ -79,10 +86,10 @@ export default function Profile() {
                                 </div>
                                 {/* <div className="mb-2 text-blueGray-600 mt-10">
                                     <i className="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>Address
-                                </div>
-                                <div className="mb-2 text-blueGray-600">
-                                    <i className="fas fa-university mr-2 text-lg text-blueGray-400"></i>Contact
-                                </div> */}
+                                </div>user */}
+                                {user?.phone && <div className="mb-2 text-blueGray-600">
+                                    <i className="fas fa-university mr-2 text-lg text-blueGray-400"></i>{user?.phone}
+                                </div>}
                             </div>
                             <div className="mt-10 py-10 text-center">
                                 <div className="flex flex-col md:flex-row items-center justify-center">

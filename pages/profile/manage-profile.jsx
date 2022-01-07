@@ -27,11 +27,13 @@ export default function ManageProfile() {
         setUser({ ...temp });
     }
 
-    const update = () => {
+    const update = (e) => {
+        e.preventDefault();
+        console.log(user);
         setLoaderTxt('Updating your details...');
         setLoader(true);
-        helper.axiosInstance.update('consumers/' + cookie.user.id, user)
-            .then(res => { setUser(res.data); setLoader(false); })
+        helper.axiosInstance.put('consumers/' + cookie.user.id, user)
+            .then(res => { setUser({ ...res.data }); setLoader(false); })
             .catch(err => { console.log(err); setLoader(false); })
     }
 
@@ -50,26 +52,11 @@ export default function ManageProfile() {
                     <div className="px-4 py-5 bg-white sm:p-6">
                         <div className="grid grid-cols-12 gap-6">
 
-                            <div className="col-span-12 col-span-6">
+                            {user && <div className="col-span-12 col-span-6">
                                 <div className="my-3">
                                     <h4 className="text-lg">Personal details</h4>
                                 </div>
 
-                                {/* <div className="col-span-12 mb-4">
-                                    <label className="block text-sm font-medium text-gray-700">Photo</label>
-                                    <div className="mt-1 flex items-center">
-                                        <span className="inline-block h-12 w-12 rounded-full overflow-hidden bg-gray-100">
-                                            <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                                            </svg>
-                                        </span>
-                                        <button type="button"
-                                            className="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                        >
-                                            Change
-                                        </button>
-                                    </div>
-                                </div> */}
                                 <div className="col-span-12 my-3">
                                     <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
                                         First Name
@@ -106,7 +93,7 @@ export default function ManageProfile() {
                                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                     />
                                 </div>
-                            </div>
+                            </div>}
 
                             {false && <div className="col-span-12 col-span-6">
                                 <div className="my-3">

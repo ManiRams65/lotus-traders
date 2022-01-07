@@ -44,7 +44,7 @@ export default function ConfirmOrder() {
         const destination = '2 Maxwell Rd, Monroe Township, NJ 08831';
         const { data, status, statusText } = await axios.get(app_url + 'api/v1/map?origin=' + origin + '&destination=' + destination);
         if (status == 200) {
-            const distance = Number((data.data.rows[0].elements[0].distance.text).split(' ')[0]);
+            const distance = (data.data.rows[0].elements[0].distance.value) * 0.000621371192;
             const charge = distance <= freeMiles ? 0 : (distance - freeMiles) * chargePerMile;
             setDistance(distance);
             setCharge(charge);
@@ -72,9 +72,9 @@ export default function ConfirmOrder() {
         console.log(body);
         try {
             setloader(true);
-            dispatch(fetchCart())
             setloaderText('Placing order...');
             const { data } = await helper.axiosInstance.post('/orders', body);
+            dispatch(fetchCart())
             router.push('/profile/orders')
         } catch (error) {
             setloader(false);
@@ -230,7 +230,7 @@ export default function ConfirmOrder() {
                             {cartItems && cartItems?.totalPrice && <p className="w-min ml-auto">{formatter.format(Number(cartItems.totalPrice))}</p>}
                         </div>
                         <div className="w-full mb-5 flex items-center">
-                            <p className="w-max">Delivery Charge ({distance} mi)</p>
+                            <p className="w-max">Delivery Charge</p>
                             <p className="w-min ml-auto">{formatter.format(Number(charge))}</p>
                         </div>
                         <div className="w-full mb-5 flex items-center">

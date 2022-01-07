@@ -25,7 +25,7 @@ export default function SearchResult({ products, searchText }) {
                             ))}
                         </div>
                     </div> : <div>
-                        <h2>No products found for '{searchText}'. Try searching for a product with a different name.</h2>
+                        <h2>No products found for '{searchText}'. Try searching with a different name.</h2>
                     </div>}
                 </div>
             </main>

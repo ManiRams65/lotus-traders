@@ -149,7 +149,7 @@ export default function Login() {
 
                     {type && type == 'forgot' ? <div>
                         <h1 className="mb-2 text-lg font-semibold text-left text-primary">Forgot Password?</h1>
-                        <h4 className="mb-4 text-sm text-left text-gray-700">Receive an authentication email by entering your email address.</h4>
+                        <h4 className="mb-4 text-sm text-left text-gray-700">Enter the email address that you used when you signed up.</h4>
                         <form className="mb-8 space-y-6">
                             <label className="block">
                                 <span className="block mb-2 text-sm font-medium text-gray-700">Your Email</span>

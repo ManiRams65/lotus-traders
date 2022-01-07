@@ -48,7 +48,7 @@ export default function ManageProduct({ isNew }) {
                             setLoading(false)
                             event.target.reset();
                             setFiles([])
-                            toast.success("The product has been successfully added!");
+                            toast.success("Product added!");
                         })
                         .catch(e => onErr(e));
                 })
@@ -61,7 +61,7 @@ export default function ManageProduct({ isNew }) {
     const onErr = (err) => {
         console.log(err);
         setLoading(false)
-        toast.error("A problem has occurred, please try again!!!")
+        toast.error("Something went wrong!!!")
     }
 
     return (

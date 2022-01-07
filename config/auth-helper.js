@@ -31,7 +31,7 @@ axiosInstance.interceptors.response.use(
             // } else {
             //     signOut();
             // }
-            if (error.response.data.payload == "Username/password are invalid") {
+            if (error.response.data.payload == "Invalid username/password") {
                 toast.error(error.response.data.payload);
             } else {
                 signOut();
